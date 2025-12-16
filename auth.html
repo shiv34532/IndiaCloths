@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d4a574;
+      --secondary-color: #8b4513;
+      --dark-bg: #1a1a1a;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #2a2a2a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .auth-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      min-height: 500px;
+    }
+    .auth-left {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+      color: white;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .auth-left h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .auth-left p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+    .auth-left-icon {
+      font-size: 4rem;
+      opacity: 0.8;
+      margin-bottom: 1rem;
+    }
+    .auth-right {
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #eee;
+    }
+    .auth-tab {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #999;
+      font-weight: 600;
+      font-size: 0.95rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .auth-tab.active {
+      color: var(--primary-color);
+    }
+    .auth-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary-color);
+    }
+    .auth-tab-content {
+      display: none;
+    }
+    .auth-tab-content.active {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      font-weight: 600;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .form-control {
+      border: 2px solid #eee;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.15);
+      outline: none;
+    }
+    .input-group .form-control {
+      border-radius: 8px 0 0 8px;
+    }
+    .input-group .btn {
+      border-radius: 0 8px 8px 0;
+      border: 2px solid #eee;
+      border-left: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(212, 165, 116, 0.2);
+    }
+    .oauth-buttons {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .oauth-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid #eee;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .oauth-btn:hover {
+      border-color: var(--primary-color);
+      background: #f9f9f9;
+    }
+    .divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      display: inline-block;
+      width: 35%;
+      height: 1px;
+      background: #eee;
+      vertical-align: middle;
+    }
+    .divider::before { margin-right: 0.5rem; }
+    .divider::after { margin-left: 0.5rem; }
+    .otp-inputs {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .otp-input {
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      font-size: 1.5rem;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+    .otp-input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+    .auth-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+    .auth-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .auth-link a:hover {
+      color: var(--secondary-color);
+    }
+    .verification-badge {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #27ae60;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    .security-info {
+      background: #f0f7ff;
+      border-left: 4px solid var(--primary-color);
+      padding: 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 1.5rem;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    .loading.active {
+      display: block;
+    }
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #eee;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 768px) {
+      .auth-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .auth-left {
+        display: none;
+      }
+      .auth-right {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="auth-container">
+  <div class="auth-wrapper">
+    <!-- Left Panel -->
+    <div class="auth-left">
+      <div class="auth-left-icon">
+        <i class="fas fa-sari"></i>
+      </div>
+      <h2>Indian Cloths</h2>
+      <p>Authentic Indian Fashion at Your Doorstep</p>
+      <p style="font-size: 0.95rem; opacity: 0.8;">
+        <i class="fas fa-shield-alt me-1"></i>
+        Secure & Fast Authentication
+      </p>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="auth-right">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">
+          <i class="fas fa-sign-in-alt me-1"></i>Login
+        </button>
+        <button class="auth-tab" data-tab="register">
+          <i class="fas fa-user-plus me-1"></i>Register
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p class="mt-3 text-muted">Processing...</p>
+      </div>
+
+      <!-- Login Tab -->
+      <div class="auth-tab-content active" id="tab-login">
+        <h4 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Welcome Back</h4>
+
+        <!-- OAuth Options -->
+        <div class="oauth-buttons">
+          <button class="oauth-btn" id="googleLoginBtn">
+            <i class="fab fa-google"></i> Google
+          </button>
+          <button class="oauth-btn" id="phoneLoginBtn">
+            <i class="fas fa-phone"></i> Phone
+          </button>
+        </div>
+
+        <div class="divider">Or</div>
+
+        <!-- Email Login -->
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input id="loginEmail" type="email" class="form-control" placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input id="loginPassword" type="password" class="form-control" placeholder="••••••••">
+        </div>
+
+        <button class="btn btn-primary" onclick="handleEmailLogin()">
+          <i class="fas fa-sign-in-alt me-2"></i>Login
+        </button>
+
+        <div class="auth-link">
+          Don't have an account? <a href="#" onclick="switchTab('register'); return false;">Register</a>
+        </div>
+
+        <div class="security-info">
+          <i class="fas fa-lock me-1"></i>
+          Your login is secured with encryption and device fingerprinting.
+        </div>
+      </div>
+
+      <!-- Register Tab -->
+      <div class="auth-tab-content" id="tab-register">
+        <h4 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Create Account</h4>
+
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input id="regFullName" type="text" class="form-control" placeholder="Your full name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input id="regEmail" type="email" class="form-control" placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <div class="input-group">
+            <input id="regPhone" type="tel" class="form-control" placeholder="9876543210">
+            <button type="button" class="btn btn-outline-primary" id="sendRegOtpBtn">Send OTP</button>
+          </div>
+        </div>
+
+        <div id="otpVerifyDiv" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Verify OTP</label>
+            <div class="otp-inputs" id="otpInputsContainer">
+              <input class="otp-input" type="text" maxlength="1" data-index="0">
+              <input class="otp-input" type="text" maxlength="1" data-index="1">
+              <input class="otp-input" type="text" maxlength="1" data-index="2">
+              <input class="otp-input" type="text" maxlength="1" data-index="3">
+              <input class="otp-input" type="text" maxlength="1" data-index="4">
+              <input class="otp-input" type="text" maxlength="1" data-index="5">
+            </div>
+            <small class="text-muted d-block text-center">Check console for demo OTP code</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input id="regPassword" type="password" class="form-control" placeholder="Min 8 characters">
+          <small class="text-muted d-block mt-1" id="passStrength"></small>
+        </div>
+
+        <button class="btn btn-primary" onclick="handleRegister()">
+          <i class="fas fa-user-plus me-2"></i>Create Account
+        </button>
+
+        <div class="auth-link">
+          Already have an account? <a href="#" onclick="switchTab('login'); return false;">Login</a>
+        </div>
+
+        <div class="security-info">
+          <i class="fas fa-check-circle me-1"></i>
+          We verify your phone and email for maximum security.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function loadStorage(key, def){ try{ return JSON.parse(localStorage.getItem(key)) || def }catch(e){return def} }
+  function saveStorage(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  function showLoading(show) { document.getElementById('loading')[show ? 'classList' : 'classList'].add('active'); }
+
+  // Tab Switching
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  }
+
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  });
+
+  // Password Strength Indicator
+  document.getElementById('regPassword').addEventListener('input', (e) => {
+    const pass = e.target.value;
+    const strength = document.getElementById('passStrength');
+    let level = 0;
+    if(pass.length >= 8) level++;
+    if(/[a-z]/.test(pass) && /[A-Z]/.test(pass)) level++;
+    if(/[0-9]/.test(pass)) level++;
+    if(/[!@#$%^&*]/.test(pass)) level++;
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    strength.textContent = labels[level] || 'Very Weak';
+  });
+
+  // OTP Input Navigation
+  document.getElementById('otpInputsContainer')?.addEventListener('input', (e) => {
+    if(e.target.classList.contains('otp-input') && e.target.value) {
+      const next = e.target.nextElementSibling;
+      if(next) next.focus();
+    }
+  });
+
+  // Email Login
+  function handleEmailLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    
+    if(!email || !password) return alert('Please enter email and password');
+    
+    const users = loadStorage('users', []);
+    const user = users.find(u => u.email === email && u.password === btoa(password));
+    
+    if(!user) return alert('Invalid credentials');
+    if(!user.emailVerified) return alert('Please verify your email first');
+    
+    const session = {
+      userId: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      phone: user.phone,
+      loginAt: new Date().toISOString()
+    };
+    saveStorage('user_session', session);
+    
+    const logs = loadStorage('auth_logs', []);
+    logs.push({type: 'email_login', userId: user.id, at: new Date().toISOString()});
+    saveStorage('auth_logs', logs);
+    
+    alert('Login successful!');
+    location.href = 'index.html';
+  }
+
+  // Phone OTP Registration
+  let regOtpData = {};
+  document.getElementById('sendRegOtpBtn').addEventListener('click', () => {
+    const phone = document.getElementById('regPhone').value.trim();
+    if(!phone) return alert('Enter phone number');
+    
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    regOtpData = { otp, phone, created: Date.now(), verified: false };
+    console.log('📱 Registration OTP for', phone, ':', otp);
+    
+    document.getElementById('otpVerifyDiv').style.display = 'block';
+    document.querySelector('.otp-input').focus();
+    alert('OTP sent. Check console for demo code.');
+  });
+
+  // OTP Verification
+  function getOtpValue() {
+    return Array.from(document.querySelectorAll('.otp-input')).map(inp => inp.value).join('');
+  }
+
+  // Register Handler
+  function handleRegister() {
+    const fullName = document.getElementById('regFullName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const password = document.getElementById('regPassword').value;
+    
+    if(!fullName || !email || !phone || !password) return alert('Fill all fields');
+    if(password.length < 8) return alert('Password must be 8+ characters');
+    
+    const otpDiv = document.getElementById('otpVerifyDiv');
+    if(otpDiv.style.display === 'block' && !regOtpData.verified) {
+      const entered = getOtpValue();
+      if(entered !== regOtpData.otp) return alert('Invalid OTP');
+      regOtpData.verified = true;
+    }
+    
+    const users = loadStorage('users', []);
+    if(users.find(u => u.email === email)) return alert('Email already registered');
+    if(users.find(u => u.phone === phone)) return alert('Phone already registered');
+    
+    const userId = 'USER' + Date.now();
+    const newUser = {
+      id: userId,
+      fullName,
+      email,
+      phone,
+      password: btoa(password),
+      emailVerified: true, // demo: auto-verify
+      phoneVerified: regOtpData.verified || false,
+      createdAt: new Date().toISOString()
+    };
+    users.push(newUser);
+    saveStorage('users', users);
+    
+    const logs = loadStorage('auth_logs', []);
+    logs.push({type: 'registration', userId, at: new Date().toISOString()});
+    saveStorage('auth_logs', logs);
+    
+    const session = { userId, fullName, email, phone, loginAt: new Date().toISOString() };
+    saveStorage('user_session', session);
+    
+    alert('Registration successful! Redirecting...');
+    location.href = 'index.html';
+  }
+
+  // Google OAuth (Demo)
+  document.getElementById('googleLoginBtn').addEventListener('click', () => {
+    const demoGoogleUser = {
+      id: 'GOOGLE_' + Math.random().toString(36).substring(7),
+      fullName: 'Google User Demo',
+      email: 'demo@gmail.com',
+      phone: '+919999999999',
+      provider: 'google'
+    };
+    const session = { ...demoGoogleUser, loginAt: new Date().toISOString() };
+    saveStorage('user_session', session);
+    
+    const logs = loadStorage('auth_logs', []);
+    logs.push({type: 'google_login', userId: demoGoogleUser.id, at: new Date().toISOString()});
+    saveStorage('auth_logs', logs);
+    
+    alert('Google login demo (simulated)');
+    location.href = 'index.html';
+  });
+
+  // Phone Login (Demo)
+  document.getElementById('phoneLoginBtn').addEventListener('click', () => {
+    const phone = prompt('Enter phone number (+91-XXXXXXXXXX):');
+    if(!phone) return;
+    
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('📱 Phone Login OTP for', phone, ':', otp);
+    
+    const enteredOtp = prompt('Enter OTP (check console):');
+    if(enteredOtp !== otp) return alert('Invalid OTP');
+    
+    const demoPhoneUser = {
+      id: 'PHONE_' + Math.random().toString(36).substring(7),
+      fullName: 'Phone User Demo',
+      email: 'phone@demo.com',
+      phone,
+      provider: 'phone'
+    };
+    const session = { ...demoPhoneUser, loginAt: new Date().toISOString() };
+    saveStorage('user_session', session);
+    
+    const logs = loadStorage('auth_logs', []);
+    logs.push({type: 'phone_login', userId: demoPhoneUser.id, at: new Date().toISOString()});
+    saveStorage('auth_logs', logs);
+    
+    alert('Phone login successful!');
+    location.href = 'index.html';
+  });
+</script>
+
+<!-- Animated Footer -->
+<footer class="footer-animated">
+  <div class="footer-content">
+    <div class="container-lg">
+      <div class="footer-top">
+        <div class="row g-4">
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.1s">
+            <div class="footer-brand">
+              <h4 class="footer-title"><i class="fas fa-sari me-2"></i>Indian Cloths</h4>
+              <p class="footer-desc">Your trusted destination for authentic Indian fashion & traditional wear.</p>
+              <div class="footer-social">
+                <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.2s">
+            <h5 class="footer-title"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="fronted/index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+              <li><a href="fronted/products.html"><i class="fas fa-chevron-right me-2"></i>Products</a></li>
+              <li><a href="fronted/cart.html"><i class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+              <li><a href="fronted/my-orders.html"><i class="fas fa-chevron-right me-2"></i>Track Orders</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.3s">
+            <h5 class="footer-title"><i class="fas fa-building me-2"></i>Company</h5>
+            <ul class="footer-links">
+              <li><a href="fronted/about.html"><i class="fas fa-chevron-right me-2"></i>About Us</a></li>
+              <li><a href="fronted/contact.html"><i class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+              <li><a href="fronted/admin.html"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+              <li><a href="auth.html"><i class="fas fa-chevron-right me-2"></i>Login/Register</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.4s">
+            <h5 class="footer-title"><i class="fas fa-headset me-2"></i>Contact Info</h5>
+            <div class="footer-contact">
+              <p class="contact-item"><i class="fas fa-envelope icon-primary"></i><span>indianclothes@gmail.com</span></p>
+              <p class="contact-item"><i class="fas fa-phone icon-primary"></i><span>+91 9999999999</span></p>
+              <p class="contact-item"><i class="fas fa-map-marker-alt icon-primary"></i><span>India</span></p>
+              <p class="contact-item"><i class="fas fa-clock icon-primary"></i><span>24/7 Available</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="copyright-text"><i class="fas fa-copyright me-1"></i> 2025 Indian Cloths. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="footer-legal-links">
+              <a href="fronted/products.html">Privacy Policy</a>
+              <span class="divider">|</span>
+              <a href="fronted/contact.html">Terms of Service</a>
+              <span class="divider">|</span>
+              <a href="fronted/about.html">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-animated{background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 50%,#1a1a1a 100%);color:#fff;padding:4rem 0 1rem;margin-top:5rem;position:relative;overflow:hidden;border-top:2px solid #d4a574}
+  .footer-animated::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#d4a574,transparent)}
+  .footer-content{position:relative;z-index:2}.footer-top{padding-bottom:3rem}.footer-section{animation:fadeInUp 0.8s ease forwards;opacity:0}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .footer-brand{padding:1rem 0}.footer-brand h4{color:#d4a574;font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;letter-spacing:1px}
+  .footer-desc{color:#b0b0b0;font-size:0.95rem;line-height:1.6;margin-bottom:1.5rem}
+  .footer-social{display:flex;gap:0.75rem}.social-icon{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(212,165,116,0.1);border:2px solid #d4a574;border-radius:50%;color:#d4a574;transition:all 0.3s ease}
+  .social-icon:hover{background:#d4a574;color:#1a1a1a;transform:translateY(-5px)}
+  .footer-title{color:#d4a574;font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;position:relative;padding-bottom:0.75rem}
+  .footer-title::after{content:'';position:absolute;bottom:0;left:0;width:40px;height:2px;background:#d4a574}
+  .footer-links{list-style:none;padding:0;margin:0}.footer-links li{margin-bottom:0.75rem}
+  .footer-links a{color:#b0b0b0;text-decoration:none;transition:all 0.3s ease;display:flex;align-items:center}
+  .footer-links a:hover{color:#d4a574;padding-left:5px}.footer-links i{color:#d4a574;font-size:0.75rem}
+  .footer-contact{display:flex;flex-direction:column;gap:1rem}.contact-item{display:flex;align-items:center;color:#b0b0b0;margin:0}
+  .icon-primary{color:#d4a574;width:24px;margin-right:1rem}
+  .footer-divider{height:1px;background:linear-gradient(90deg,transparent,#d4a574,transparent);margin:2rem 0}
+  .footer-bottom{padding:2rem 0 1rem}.copyright-text{color:#909090;margin:0;font-size:0.95rem}
+  .footer-legal-links{display:flex;justify-content:center;align-items:center;gap:1rem;flex-wrap:wrap}
+  .footer-legal-links a{color:#b0b0b0;text-decoration:none;transition:color 0.3s ease;font-size:0.95rem}
+  .footer-legal-links a:hover{color:#d4a574}.footer-legal-links .divider{color:#555}
+  @media(max-width:768px){.footer-animated{padding:2rem 0 1rem;margin-top:3rem}.footer-top{padding-bottom:2rem}.footer-section{margin-bottom:1.5rem}.footer-bottom{text-align:center}.footer-legal-links{justify-content:center;margin-top:1rem}}
+  .fade-in-up{animation:fadeInUp 0.8s ease forwards;opacity:0}
+</style>
+
+</body>
+</html>
