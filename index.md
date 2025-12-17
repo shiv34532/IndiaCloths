@@ -399,3 +399,4 @@ Start with **QUICK_REFERENCE.md** for a 5-minute overview, then explore based on
 **Questions?** Check the relevant documentation file.
 **Found a bug?** Test with test.html to confirm.
 **Want to extend?** Review ARCHITECTURE.md for technical details.
+
