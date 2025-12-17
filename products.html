@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Products - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d4a574;
+      --secondary-color: #8b4513;
+      --dark-bg: #1a1a1a;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color) !important;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    .nav-link {
+      transition: all 0.3s ease;
+      color: #fff !important;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color) !important;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+
+    /* Filter Sidebar */
+    .filter-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .filter-section h5 {
+      color: var(--secondary-color);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-check {
+      margin-bottom: 1rem;
+    }
+
+    .form-check-input {
+      border-color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .form-check-input:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .form-check-label {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Product Card */
+    .product-card {
+      background: white;
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(212, 165, 116, 0.3);
+    }
+
+    .product-img {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-img img {
+      transform: scale(1.1);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .product-body {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-name {
+      color: var(--secondary-color);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .product-category {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .product-price {
+      color: var(--primary-color);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .product-rating {
+      color: #ffc107;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary-color);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+      flex: 1;
+    }
+
+    .btn-outline-primary:hover {
+      background: var(--primary-color);
+    }
+
+    /* Search Bar */
+    .search-bar {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .search-bar input {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.25);
+    }
+
+    /* Sort Options */
+    .sort-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .sort-section select {
+      border-color: var(--primary-color);
+    }
+
+    .sort-section select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.25);
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a);
+      color: #fff;
+      padding: 3rem 0 1rem;
+      margin-top: 4rem;
+    }
+
+    .footer-section h5 {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .footer-link {
+      color: #b0b0b0;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--primary-color);
+    }
+
+    .no-products {
+      text-align: center;
+      padding: 3rem;
+      background: white;
+      border-radius: 10px;
+      color: #888;
+    }
+
+    .no-products i {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .stock-badge {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+    }
+
+    .stock-high {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .stock-low {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* Skeleton loader */
+    .skeleton-card {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 37%, #f0f0f0 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.2s linear infinite;
+      border-radius: 12px;
+      height: 350px;
+    }
+
+    .skeleton-img { height: 55%; border-radius: 12px 12px 0 0; }
+    .skeleton-line { height: 14px; width: 70%; margin: 12px auto; background: rgba(255,255,255,0.4); border-radius: 4px; }
+    .skeleton-line.short { width: 40%; }
+
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+  </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container-lg">
+    <a class="navbar-brand" href="index.html"><i class="fas fa-sari me-2"></i>Indian Cloths</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-bag"></i> Cart</a></li>
+        <li class="nav-item" id="userMenuDiv" style="display:none;">
+          <a class="nav-link" href="my-orders.html"><i class="fas fa-box"></i> Orders</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="admin.html"><i class="fas fa-lock"></i> Admin</a></li>
+        <li class="nav-item" id="authMenuDiv">
+          <a class="nav-link" href="auth.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+        <li class="nav-item" id="logoutDiv" style="display:none;">
+          <a class="nav-link" href="#" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header text-center">
+  <div class="container-lg">
+    <h1>Our Collections</h1>
+    <p class="lead">Discover our finest selection of authentic Indian wear</p>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container-lg py-5">
+  <div class="row">
+    <!-- Sidebar Filters -->
+    <div class="col-md-3">
+      <!-- Search -->
+      <div class="search-bar">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search products...">
+      </div>
+
+      <!-- Category Filter -->
+      <div class="filter-section">
+        <h5><i class="fas fa-th me-2"></i>Categories</h5>
+        <div class="form-check">
+          <input class="form-check-input category-filter" type="checkbox" value="sarees" id="sarees">
+          <label class="form-check-label" for="sarees">Sarees</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input category-filter" type="checkbox" value="kurtas" id="kurtas">
+          <label class="form-check-label" for="kurtas">Kurtas</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input category-filter" type="checkbox" value="dupattas" id="dupattas">
+          <label class="form-check-label" for="dupattas">Dupattas</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input category-filter" type="checkbox" value="jewelry" id="jewelry">
+          <label class="form-check-label" for="jewelry">Jewelry</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input category-filter" type="checkbox" value="lehengas" id="lehengas">
+          <label class="form-check-label" for="lehengas">Lehengas</label>
+        </div>
+      </div>
+
+      <!-- Price Filter -->
+      <div class="filter-section">
+        <h5><i class="fas fa-tag me-2"></i>Price Range</h5>
+        <div class="form-check">
+          <input class="form-check-input price-filter" type="checkbox" value="0-1000" id="price1">
+          <label class="form-check-label" for="price1">₹0 - ₹1,000</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input price-filter" type="checkbox" value="1000-3000" id="price2">
+          <label class="form-check-label" for="price2">₹1,000 - ₹3,000</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input price-filter" type="checkbox" value="3000-5000" id="price3">
+          <label class="form-check-label" for="price3">₹3,000 - ₹5,000</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input price-filter" type="checkbox" value="5000+" id="price4">
+          <label class="form-check-label" for="price4">₹5,000+</label>
+        </div>
+      </div>
+
+      <!-- Size Filter -->
+      <div class="filter-section">
+        <h5><i class="fas fa-expand me-2"></i>Size</h5>
+        <div class="form-check">
+          <input class="form-check-input size-filter" type="checkbox" value="XS" id="sizeXS">
+          <label class="form-check-label" for="sizeXS">Extra Small</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input size-filter" type="checkbox" value="S" id="sizeS">
+          <label class="form-check-label" for="sizeS">Small</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input size-filter" type="checkbox" value="M" id="sizeM">
+          <label class="form-check-label" for="sizeM">Medium</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input size-filter" type="checkbox" value="L" id="sizeL">
+          <label class="form-check-label" for="sizeL">Large</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input size-filter" type="checkbox" value="XL" id="sizeXL">
+          <label class="form-check-label" for="sizeXL">Extra Large</label>
+        </div>
+      </div>
+
+      <!-- Reset Filters -->
+      <button class="btn btn-outline-secondary w-100" id="resetFilters">
+        <i class="fas fa-redo me-2"></i>Reset Filters
+      </button>
+    </div>
+
+    <!-- Product Section -->
+    <div class="col-md-9">
+      <!-- Sort Options -->
+      <div class="sort-section d-flex gap-3 justify-content-between align-items-center">
+        <div class="flex-grow-1">
+          <label for="sortBy" class="form-label mb-0">Sort by:</label>
+          <select id="sortBy" class="form-select form-select-sm">
+            <option value="">Most Relevant</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="newest">Newest Arrivals</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+        <div class="text-muted">
+          <span id="productCount">Showing</span> products
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="productsContainer" class="row g-4">
+        <!-- Products will be loaded here -->
+      </div>
+
+      <!-- No Products Message -->
+      <div id="noProducts" class="no-products" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h5>No Products Found</h5>
+        <p>Try adjusting your filters or search terms</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container-lg">
+    <div class="row mb-4">
+      <div class="col-md-3 footer-section mb-4">
+        <h5><i class="fas fa-sari me-2"></i>Indian Cloths</h5>
+        <p class="text-muted">Your trusted destination for authentic Indian fashion.</p>
+      </div>
+      <div class="col-md-3 footer-section mb-4">
+        <h5>Quick Links</h5>
+        <a href="index.html" class="footer-link d-block">Home</a>
+        <a href="products.html" class="footer-link d-block">Products</a>
+        <a href="about.html" class="footer-link d-block">About Us</a>
+        <a href="contact.html" class="footer-link d-block">Contact</a>
+      </div>
+      <div class="col-md-3 footer-section mb-4">
+        <h5>Support</h5>
+        <a href="#" class="footer-link d-block">Track Order</a>
+        <a href="#" class="footer-link d-block">Returns</a>
+        <a href="#" class="footer-link d-block">FAQ</a>
+      </div>
+      <div class="col-md-3 footer-section mb-4">
+        <h5>Contact</h5>
+        <p class="text-muted">Gandhidham, Kutch, Gujarat</p>
+        <p class="text-muted">indianclotandh@gmail.com</p>
+      </div>
+    </div>
+    <div class="border-top pt-3 text-center text-muted">
+      <p>&copy; 2025 Indian Cloths. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+<script>
+  const productsUrl = 'products.json';
+  let productsData = [];
+  let filteredProducts = [];
+  let fuse = null;
+
+  // Show skeleton cards while loading
+  function renderSkeleton(count = 6) {
+    const container = document.getElementById('productsContainer');
+    container.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const col = document.createElement('div');
+      col.className = 'col-sm-6 col-lg-4';
+      col.innerHTML = `
+        <div class="skeleton-card">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      `;
+      container.appendChild(col);
+    }
+  }
+
+  // Render Products
+  function renderProducts(products) {
+    const container = document.getElementById('productsContainer');
+    const noProducts = document.getElementById('noProducts');
+    
+    if (products.length === 0) {
+      container.innerHTML = '';
+      noProducts.style.display = 'block';
+      document.getElementById('productCount').textContent = '0';
+      return;
+    }
+
+    noProducts.style.display = 'none';
+    document.getElementById('productCount').textContent = products.length;
+
+    container.innerHTML = products.map(product => {
+      const thumb = (product.images && product.images.length) ? product.images[0] : (product.image || '');
+      const extraThumbs = (product.images && product.images.length > 1) ? product.images.slice(1,3) : [];
+      const thumbnailsHtml = extraThumbs.map(src => `<img src="${src}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;margin-left:6px;">`).join('');
+
+      return `
+      <div class="col-sm-6 col-lg-4">
+        <div class="product-card">
+          <div class="product-img">
+            <img src="${thumb}" alt="${product.name}">
+            ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+          </div>
+          <div class="product-body">
+            <h6 class="product-category">${product.category.toUpperCase()}</h6>
+            <h5 class="product-name">${product.name}</h5>
+            <div class="product-rating">
+              ${'<i class="fas fa-star"></i>'.repeat(product.rating)}<span class="ms-2">${product.rating}.0</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <p class="product-price mb-0">₹${product.price}</p>
+              <span class="stock-badge ${product.stock > 10 ? 'stock-high' : 'stock-low'}">
+                ${product.stock} in stock
+              </span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+              <div class="d-flex">${thumbnailsHtml}</div>
+            </div>
+            <div class="product-actions">
+              <a href="product-details.html?id=${product.id}" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-eye me-1"></i>View
+              </a>
+              <button class="btn btn-primary btn-sm add-to-cart-btn" data-product-id="${product.id}" data-product-name="${product.name}">
+                <i class="fas fa-shopping-bag me-1"></i>Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `}).join('');
+  }
+
+  // Filtering logic with Fuse.js fuzzy search
+  function filterProducts() {
+    const searchTerm = document.getElementById('searchInput').value.trim();
+    const selectedCategories = Array.from(document.querySelectorAll('.category-filter:checked')).map(cb => cb.value);
+    const selectedPrices = Array.from(document.querySelectorAll('.price-filter:checked')).map(cb => cb.value);
+    const selectedSizes = Array.from(document.querySelectorAll('.size-filter:checked')).map(cb => cb.value);
+
+    let results = [...productsData];
+
+    // Fuse.js fuzzy search if search term provided
+    if (searchTerm && fuse) {
+      const fuzzyResults = fuse.search(searchTerm);
+      results = fuzzyResults.map(r => r.item);
+    } else if (searchTerm) {
+      results = results.filter(p => 
+        p.name.toLowerCase().includes(searchTerm) || 
+        p.category.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    filteredProducts = results.filter(product => {
+      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+      
+      let matchesPrice = selectedPrices.length === 0;
+      if (selectedPrices.length > 0) {
+        matchesPrice = selectedPrices.some(range => {
+          if (range === '0-1000') return product.price <= 1000;
+          if (range === '1000-3000') return product.price >= 1000 && product.price <= 3000;
+          if (range === '3000-5000') return product.price >= 3000 && product.price <= 5000;
+          if (range === '5000+') return product.price >= 5000;
+          return false;
+        });
+      }
+
+      let matchesSize = selectedSizes.length === 0;
+      if (selectedSizes.length > 0 && product.sizes) {
+        matchesSize = selectedSizes.some(size => product.sizes.includes(size));
+      }
+
+      return matchesCategory && matchesPrice && matchesSize;
+    });
+
+    sortProducts();
+    renderProducts(filteredProducts);
+  }
+
+  function sortProducts() {
+    const sortBy = document.getElementById('sortBy').value;
+    switch(sortBy) {
+      case 'price-low': filteredProducts.sort((a,b)=>a.price-b.price); break;
+      case 'price-high': filteredProducts.sort((a,b)=>b.price-a.price); break;
+      case 'newest': filteredProducts.sort((a,b)=>b.id-a.id); break;
+      case 'rating': filteredProducts.sort((a,b)=>b.rating-a.rating); break;
+    }
+  }
+
+  // Event Listeners
+  document.getElementById('searchInput').addEventListener('input', filterProducts);
+  document.querySelectorAll('.category-filter').forEach(cb => cb.addEventListener('change', filterProducts));
+  document.querySelectorAll('.price-filter').forEach(cb => cb.addEventListener('change', filterProducts));
+  document.querySelectorAll('.size-filter').forEach(cb => cb.addEventListener('change', filterProducts));
+  document.getElementById('sortBy').addEventListener('change', () => { sortProducts(); renderProducts(filteredProducts); });
+
+  document.getElementById('resetFilters').addEventListener('click', () => {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortBy').value = '';
+    filteredProducts = [...productsData];
+    renderProducts(filteredProducts);
+  });
+
+  // Fetch products.json and initialize UI
+  async function loadProducts() {
+    renderSkeleton(6);
+    try {
+      const res = await fetch(productsUrl, {cache: 'no-store'});
+      if (!res.ok) {
+        const body = await res.text().catch(()=>'<no body>');
+        throw new Error(`HTTP ${res.status} ${res.statusText} - ${body}`);
+      }
+      const data = await res.json();
+      // support wrapped { products: [...] } or raw array
+      const items = Array.isArray(data) ? data : (data.products || []);
+      // Normalize fields
+      productsData = items.map(p => ({
+        ...p,
+        images: (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []),
+        reviews: p.reviews || []
+      }));
+      
+      // Initialize Fuse.js with fuzzy search options
+      fuse = new Fuse(productsData, {
+        keys: ['name', 'category', 'family', 'colors'],
+        threshold: 0.4,  // allows ~60% typo tolerance
+        ignoreLocation: true,
+        minMatchCharLength: 2
+      });
+      
+      filteredProducts = [...productsData];
+      renderProducts(filteredProducts);
+    } catch (err) {
+      console.error('Could not load products.json', err);
+      const container = document.getElementById('productsContainer');
+      container.innerHTML = `
+        <div class="alert alert-warning">
+          <strong>Could not load product data.</strong>
+          <div>${err.message}</div>
+          <div class="mt-2">Check the file <code>products.json</code> and open the browser console for details.</div>
+        </div>
+      `;
+    }
+  }
+
+  // Initial load
+  loadProducts();
+
+  // Auth management
+  function loadStorage(key, def){ try{ return JSON.parse(localStorage.getItem(key)) || def }catch(e){return def} }
+  function saveStorage(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  
+  function checkUserSession() {
+    const session = loadStorage('user_session', null);
+    const authMenuDiv = document.getElementById('authMenuDiv');
+    const userMenuDiv = document.getElementById('userMenuDiv');
+    const logoutDiv = document.getElementById('logoutDiv');
+    
+    if(session) {
+      authMenuDiv.style.display = 'none';
+      userMenuDiv.style.display = 'block';
+      logoutDiv.style.display = 'block';
+    } else {
+      authMenuDiv.style.display = 'block';
+      userMenuDiv.style.display = 'none';
+      logoutDiv.style.display = 'none';
+    }
+  }
+  
+  function handleLogout() {
+    if(confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('user_session');
+      const logs = loadStorage('auth_logs', []);
+      logs.push({type: 'logout', at: new Date().toISOString()});
+      saveStorage('auth_logs', logs);
+      alert('Logged out successfully!');
+      location.href = 'index.html';
+    }
+  }
+
+  // Add to Cart with Authentication Check
+  document.addEventListener('click', (e) => {
+    if(e.target.closest('.add-to-cart-btn')) {
+      e.preventDefault();
+      const session = loadStorage('user_session', null);
+      const productId = e.target.closest('.add-to-cart-btn').dataset.productId;
+      const productName = e.target.closest('.add-to-cart-btn').dataset.productName;
+      
+      if(!session) {
+        const result = confirm(`Please login to add "${productName}" to cart. Click OK to go to login page.`);
+        if(result) {
+          location.href = 'auth.html';
+        }
+      } else {
+        // User is logged in, add to cart
+        window.location.href = 'cart.html?add=' + productId;
+      }
+    }
+  });
+  
+  // Check session on page load
+  checkUserSession();
+  
+  // Listen for storage changes
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'user_session') {
+      checkUserSession();
+    }
+  });
+</script>
+
+<!-- Animated Footer -->
+<footer class="footer-animated">
+  <div class="footer-content">
+    <div class="container-lg">
+      <!-- Top Section -->
+      <div class="footer-top">
+        <div class="row g-4">
+          <!-- Brand Section -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.1s">
+            <div class="footer-brand">
+              <h4 class="footer-title"><i class="fas fa-sari me-2"></i>Indian Cloths</h4>
+              <p class="footer-desc">Your trusted destination for authentic Indian fashion & traditional wear.</p>
+              <div class="footer-social">
+                <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.2s">
+            <h5 class="footer-title"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+              <li><a href="products.html"><i class="fas fa-chevron-right me-2"></i>Products</a></li>
+              <li><a href="cart.html"><i class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+              <li><a href="my-orders.html"><i class="fas fa-chevron-right me-2"></i>Track Orders</a></li>
+            </ul>
+          </div>
+
+          <!-- Company -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.3s">
+            <h5 class="footer-title"><i class="fas fa-building me-2"></i>Company</h5>
+            <ul class="footer-links">
+              <li><a href="about.html"><i class="fas fa-chevron-right me-2"></i>About Us</a></li>
+              <li><a href="contact.html"><i class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+              <li><a href="admin.html"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+              <li><a href="auth.html"><i class="fas fa-chevron-right me-2"></i>Login/Register</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.4s">
+            <h5 class="footer-title"><i class="fas fa-headset me-2"></i>Contact Info</h5>
+            <div class="footer-contact">
+              <p class="contact-item">
+                <i class="fas fa-envelope icon-primary"></i>
+                <span>indianclothes@gmail.com</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-phone icon-primary"></i>
+                <span>+91 9999999999</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-map-marker-alt icon-primary"></i>
+                <span>India</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-clock icon-primary"></i>
+                <span>24/7 Available</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="footer-divider"></div>
+
+      <!-- Bottom Section -->
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="copyright-text">
+              <i class="fas fa-copyright me-1"></i> 2025 Indian Cloths. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="footer-legal-links">
+              <a href="products.html">Privacy Policy</a>
+              <span class="divider">|</span>
+              <a href="contact.html">Terms of Service</a>
+              <span class="divider">|</span>
+              <a href="about.html">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated Background Elements -->
+  <div class="footer-bg-pattern"></div>
+</footer>
+
+<style>
+  /* Animated Footer Styles */
+  .footer-animated {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+    color: #fff;
+    padding: 4rem 0 1rem;
+    margin-top: 5rem;
+    position: relative;
+    overflow: hidden;
+    border-top: 2px solid #d4a574;
+  }
+
+  .footer-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+  }
+
+  .footer-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-top {
+    padding-bottom: 3rem;
+  }
+
+  .footer-section {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Brand Section */
+  .footer-brand {
+    padding: 1rem 0;
+  }
+
+  .footer-brand h4 {
+    color: #d4a574;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  .footer-desc {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Social Icons */
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(212, 165, 116, 0.1);
+    border: 2px solid #d4a574;
+    border-radius: 50%;
+    color: #d4a574;
+    transition: all 0.3s ease;
+  }
+
+  .social-icon:hover {
+    background: #d4a574;
+    color: #1a1a1a;
+    transform: translateY(-5px);
+  }
+
+  /* Footer Title */
+  .footer-title {
+    color: #d4a574;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+  }
+
+  .footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #d4a574;
+  }
+
+  /* Footer Links */
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-links a:hover {
+    color: #d4a574;
+    padding-left: 5px;
+  }
+
+  .footer-links i {
+    color: #d4a574;
+    font-size: 0.75rem;
+  }
+
+  /* Contact Info */
+  .footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    color: #b0b0b0;
+    margin: 0;
+  }
+
+  .icon-primary {
+    color: #d4a574;
+    width: 24px;
+    margin-right: 1rem;
+  }
+
+  /* Footer Divider */
+  .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+    margin: 2rem 0;
+  }
+
+  /* Bottom Section */
+  .footer-bottom {
+    padding: 2rem 0 1rem;
+  }
+
+  .copyright-text {
+    color: #909090;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .footer-legal-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-legal-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .footer-legal-links a:hover {
+    color: #d4a574;
+  }
+
+  .footer-legal-links .divider {
+    color: #555;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-animated {
+      padding: 2rem 0 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer-top {
+      padding-bottom: 2rem;
+    }
+
+    .footer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+    }
+
+    .footer-legal-links {
+      justify-content: center;
+      margin-top: 1rem;
+    }
+  }
+
+  /* Fade In Animation */
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+</style>

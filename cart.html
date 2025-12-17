@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopping Cart - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d4a574;
+      --secondary-color: #8b4513;
+      --dark-bg: #1a1a1a;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .navbar-brand {
+      color: var(--primary-color) !important;
+      font-weight: 700;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-color) !important;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      padding: 2rem 0;
+    }
+
+    .cart-container {
+      padding: 2rem 0;
+    }
+
+    .cart-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .cart-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-name {
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-item-price {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 0.25rem;
+      width: fit-content;
+    }
+
+    .qty-control button {
+      background: none;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      color: var(--primary-color);
+    }
+
+    .qty-control input {
+      width: 50px;
+      text-align: center;
+      border: none;
+      font-weight: 600;
+    }
+
+    .cart-summary {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 80px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-row.total {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      padding-top: 1rem;
+    }
+
+    .summary-row.total .price {
+      color: var(--primary-color);
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      color: white;
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary-color);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 3rem;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .empty-cart i {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .promo-code {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .promo-code input {
+      border-color: var(--primary-color);
+    }
+
+    .promo-code input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.25);
+    }
+
+    footer {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a);
+      color: #fff;
+      padding: 3rem 0 1rem;
+      margin-top: 4rem;
+    }
+
+    .footer-section h5 {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .footer-link {
+      color: #b0b0b0;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container-lg">
+    <a class="navbar-brand" href="index.html"><i class="fas fa-sari me-2"></i>Indian Cloths</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link active" href="cart.html"><i class="fas fa-shopping-bag"></i> Cart</a></li>
+        <li class="nav-item" id="userMenuDiv" style="display:none;">
+          <a class="nav-link" href="my-orders.html"><i class="fas fa-box"></i> Orders</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="admin.html"><i class="fas fa-lock"></i> Admin</a></li>
+        <li class="nav-item" id="authMenuDiv">
+          <a class="nav-link" href="auth.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+        <li class="nav-item" id="logoutDiv" style="display:none;">
+          <a class="nav-link" href="#" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header text-center">
+  <div class="container-lg">
+    <h1>Your Shopping Cart</h1>
+    <p class="lead">Review your items and proceed to checkout</p>
+  </div>
+</div>
+
+<!-- Cart Content -->
+<div class="container-lg cart-container">
+  <div class="row g-4">
+    <!-- Cart Items -->
+    <div class="col-lg-8">
+      <div id="cartItems"></div>
+
+      <!-- Empty Cart Message (Hidden by default) -->
+      <div id="emptyCart" class="empty-cart" style="display: none;">
+        <i class="fas fa-shopping-cart"></i>
+        <h4>Your cart is empty</h4>
+        <p>Add some items to get started!</p>
+        <a href="products.html" class="btn btn-primary mt-3">Continue Shopping</a>
+      </div>
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="col-lg-4">
+      <!-- Promo Code -->
+      <div class="promo-code">
+        <h5 style="color: var(--secondary-color); margin-bottom: 1rem;">Promo Code</h5>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Enter code" aria-label="Promo code">
+          <button class="btn btn-outline-primary" type="button">Apply</button>
+        </div>
+      </div>
+
+      <!-- Cart Summary -->
+      <div class="cart-summary">
+        <h5 style="color: var(--secondary-color); margin-bottom: 1rem;">Order Summary</h5>
+        
+        <div id="summaryRows"></div>
+        <a id="checkoutBtn" href="checkout.html" class="btn btn-primary">
+          <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+        </a>
+        <a href="products.html" class="btn btn-secondary">
+          <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+        </a>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.9rem; color: #888;">
+          <p><i class="fas fa-shield-alt me-2"></i>Secure checkout with SSL encryption</p>
+          <p><i class="fas fa-undo me-2"></i>30-day return policy</p>
+          <p><i class="fas fa-truck me-2"></i>Free delivery on orders above ₹999</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Simple cart using localStorage
+  function loadStorage(key,def){ try{ const v = localStorage.getItem(key); console.log('[cart] load', key, v); return JSON.parse(v) || def }catch(e){ console.error('[cart] load error', e); return def } }
+  function saveStorage(key,val){ try{ localStorage.setItem(key, JSON.stringify(val)); console.log('[cart] save', key, val); }catch(e){ console.error('[cart] save error', e); } }
+
+  function renderCart(){
+    const cart = loadStorage('cart', []);
+    const container = document.getElementById('cartItems');
+    const empty = document.getElementById('emptyCart');
+    container.innerHTML = '';
+    if(!cart || cart.length===0){ container.style.display='none'; empty.style.display='block'; document.getElementById('summaryRows').innerHTML=''; return; }
+    empty.style.display='none'; container.style.display='block';
+
+    let subtotal = 0;
+    cart.forEach((item, idx)=>{
+      const row = document.createElement('div'); row.className='cart-item';
+      row.innerHTML = `
+        <img src="${item.image||''}" alt="Product">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">₹${item.price}</div>
+          <small class="text-muted">Size: ${item.size || '-'} | Color: ${item.color || '-'}</small>
+        </div>
+        <div class="qty-control">
+          <button data-idx="${idx}" class="dec">-</button>
+          <input type="number" value="${item.qty}" min="1" data-idx="${idx}">
+          <button data-idx="${idx}" class="inc">+</button>
+        </div>
+        <div style="width: 100px; text-align: right;">
+          <div style="color: var(--primary-color); font-weight: 700;">₹${item.price * item.qty}</div>
+          <button class="btn btn-sm btn-danger mt-2 remove" data-idx="${idx}">Remove</button>
+        </div>
+      `;
+      container.appendChild(row);
+      subtotal += item.price * item.qty;
+    });
+
+    const tax = Math.round(subtotal * 0.18);
+    const total = subtotal + tax;
+    document.getElementById('summaryRows').innerHTML = `
+      <div class="summary-row"><span>Subtotal</span><span>₹${subtotal}</span></div>
+      <div class="summary-row"><span>Shipping</span><span>Free</span></div>
+      <div class="summary-row"><span>Tax (18%)</span><span>₹${tax}</span></div>
+      <div class="summary-row total"><span>Total</span><span class="price">₹${total}</span></div>
+    `;
+
+    // attach handlers
+    container.querySelectorAll('.inc').forEach(b=> b.addEventListener('click', e=> { const i=+e.target.dataset.idx; cart[i].qty++; saveStorage('cart',cart); renderCart(); }));
+    container.querySelectorAll('.dec').forEach(b=> b.addEventListener('click', e=> { const i=+e.target.dataset.idx; if(cart[i].qty>1) cart[i].qty--; saveStorage('cart',cart); renderCart(); }));
+    container.querySelectorAll('input[type="number"]').forEach(inp=> inp.addEventListener('change', e=>{ const i=+e.target.dataset.idx; cart[i].qty = Math.max(1, parseInt(e.target.value)||1); saveStorage('cart',cart); renderCart(); }));
+    container.querySelectorAll('.remove').forEach(b=> b.addEventListener('click', e=>{ const i=+e.target.dataset.idx; if(confirm('Remove this item?')){ cart.splice(i,1); saveStorage('cart',cart); renderCart(); } }));
+    document.getElementById('checkoutBtn').style.display = cart.length ? 'block' : 'none';
+  }
+
+  // initialize
+  renderCart();
+
+  // Auth management
+  function checkUserSession() {
+    const session = loadStorage('user_session', null);
+    const authMenuDiv = document.getElementById('authMenuDiv');
+    const userMenuDiv = document.getElementById('userMenuDiv');
+    const logoutDiv = document.getElementById('logoutDiv');
+    
+    if(session) {
+      authMenuDiv.style.display = 'none';
+      userMenuDiv.style.display = 'block';
+      logoutDiv.style.display = 'block';
+    } else {
+      authMenuDiv.style.display = 'block';
+      userMenuDiv.style.display = 'none';
+      logoutDiv.style.display = 'none';
+    }
+  }
+  
+  function handleLogout() {
+    if(confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('user_session');
+      const logs = loadStorage('auth_logs', []);
+      logs.push({type: 'logout', at: new Date().toISOString()});
+      saveStorage('auth_logs', logs);
+      alert('Logged out successfully!');
+      location.href = 'index.html';
+    }
+  }
+  
+  checkUserSession();
+  
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'user_session') {
+      checkUserSession();
+    }
+  });
+</script>
+
+<!-- Animated Footer -->
+<footer class="footer-animated">
+  <div class="footer-content">
+    <div class="container-lg">
+      <!-- Top Section -->
+      <div class="footer-top">
+        <div class="row g-4">
+          <!-- Brand Section -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.1s">
+            <div class="footer-brand">
+              <h4 class="footer-title"><i class="fas fa-sari me-2"></i>Indian Cloths</h4>
+              <p class="footer-desc">Your trusted destination for authentic Indian fashion & traditional wear.</p>
+              <div class="footer-social">
+                <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.2s">
+            <h5 class="footer-title"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+              <li><a href="products.html"><i class="fas fa-chevron-right me-2"></i>Products</a></li>
+              <li><a href="cart.html"><i class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+              <li><a href="my-orders.html"><i class="fas fa-chevron-right me-2"></i>Track Orders</a></li>
+            </ul>
+          </div>
+
+          <!-- Company -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.3s">
+            <h5 class="footer-title"><i class="fas fa-building me-2"></i>Company</h5>
+            <ul class="footer-links">
+              <li><a href="about.html"><i class="fas fa-chevron-right me-2"></i>About Us</a></li>
+              <li><a href="contact.html"><i class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+              <li><a href="admin.html"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+              <li><a href="auth.html"><i class="fas fa-chevron-right me-2"></i>Login/Register</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.4s">
+            <h5 class="footer-title"><i class="fas fa-headset me-2"></i>Contact Info</h5>
+            <div class="footer-contact">
+              <p class="contact-item">
+                <i class="fas fa-envelope icon-primary"></i>
+                <span>indianclothes@gmail.com</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-phone icon-primary"></i>
+                <span>+91 9999999999</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-map-marker-alt icon-primary"></i>
+                <span>India</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-clock icon-primary"></i>
+                <span>24/7 Available</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="footer-divider"></div>
+
+      <!-- Bottom Section -->
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="copyright-text">
+              <i class="fas fa-copyright me-1"></i> 2025 Indian Cloths. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="footer-legal-links">
+              <a href="products.html">Privacy Policy</a>
+              <span class="divider">|</span>
+              <a href="contact.html">Terms of Service</a>
+              <span class="divider">|</span>
+              <a href="about.html">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated Background Elements -->
+  <div class="footer-bg-pattern"></div>
+</footer>
+
+<style>
+  /* Animated Footer Styles */
+  .footer-animated {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+    color: #fff;
+    padding: 4rem 0 1rem;
+    margin-top: 5rem;
+    position: relative;
+    overflow: hidden;
+    border-top: 2px solid #d4a574;
+  }
+
+  .footer-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+  }
+
+  .footer-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-top {
+    padding-bottom: 3rem;
+  }
+
+  .footer-section {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Brand Section */
+  .footer-brand {
+    padding: 1rem 0;
+  }
+
+  .footer-brand h4 {
+    color: #d4a574;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  .footer-desc {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Social Icons */
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(212, 165, 116, 0.1);
+    border: 2px solid #d4a574;
+    border-radius: 50%;
+    color: #d4a574;
+    transition: all 0.3s ease;
+  }
+
+  .social-icon:hover {
+    background: #d4a574;
+    color: #1a1a1a;
+    transform: translateY(-5px);
+  }
+
+  /* Footer Title */
+  .footer-title {
+    color: #d4a574;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+  }
+
+  .footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #d4a574;
+  }
+
+  /* Footer Links */
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-links a:hover {
+    color: #d4a574;
+    padding-left: 5px;
+  }
+
+  .footer-links i {
+    color: #d4a574;
+    font-size: 0.75rem;
+  }
+
+  /* Contact Info */
+  .footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    color: #b0b0b0;
+    margin: 0;
+  }
+
+  .icon-primary {
+    color: #d4a574;
+    width: 24px;
+    margin-right: 1rem;
+  }
+
+  /* Footer Divider */
+  .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+    margin: 2rem 0;
+  }
+
+  /* Bottom Section */
+  .footer-bottom {
+    padding: 2rem 0 1rem;
+  }
+
+  .copyright-text {
+    color: #909090;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .footer-legal-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-legal-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .footer-legal-links a:hover {
+    color: #d4a574;
+  }
+
+  .footer-legal-links .divider {
+    color: #555;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-animated {
+      padding: 2rem 0 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer-top {
+      padding-bottom: 2rem;
+    }
+
+    .footer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+    }
+
+    .footer-legal-links {
+      justify-content: center;
+      margin-top: 1rem;
+    }
+  }
+
+  /* Fade In Animation */
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+</style>
+
+</body>
+</html>

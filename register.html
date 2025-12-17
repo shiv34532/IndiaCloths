@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d4a574;
+      --secondary-color: #8b4513;
+      --dark-bg: #1a1a1a;
+    }
+    body {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .register-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      padding: 2rem;
+      max-width: 450px;
+      width: 100%;
+    }
+    .register-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 3px solid var(--primary-color);
+      padding-bottom: 1rem;
+    }
+    .register-header h2 {
+      color: var(--secondary-color);
+      font-weight: 700;
+    }
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.25);
+    }
+    .btn-register {
+      background: var(--primary-color);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem;
+    }
+    .btn-register:hover {
+      background: var(--secondary-color);
+      color: white;
+    }
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #666;
+    }
+    .login-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .login-link a:hover {
+      color: var(--secondary-color);
+    }
+    .password-strength {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+    .strength-weak { color: #dc3545; }
+    .strength-fair { color: #ffc107; }
+    .strength-good { color: #28a745; }
+  </style>
+</head>
+<body>
+<div class="register-container">
+  <div class="register-header">
+    <h2><i class="fas fa-sari me-2"></i>Indian Cloths</h2>
+    <p class="lead mb-0">Create Your Account</p>
+  </div>
+
+  <form id="registerForm">
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input id="fullName" type="text" class="form-control" placeholder="Your full name" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input id="email" type="email" class="form-control" placeholder="your@email.com" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Phone</label>
+      <input id="phone" type="tel" class="form-control" placeholder="+91-XXXXXXXXXX" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input id="password" type="password" class="form-control" placeholder="Min 8 characters" required>
+      <div class="password-strength" id="strengthText"></div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Confirm Password</label>
+      <input id="confirmPassword" type="password" class="form-control" placeholder="Re-enter password" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" required>
+        I agree to Terms & Conditions and Privacy Policy
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-register w-100"><i class="fas fa-user-plus me-2"></i>Register</button>
+
+    <div class="login-link">
+      Already have an account? <a href="login.html">Login here</a>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function loadStorage(key, def){ try{ return JSON.parse(localStorage.getItem(key)) || def }catch(e){return def} }
+  function saveStorage(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+  // Password strength indicator
+  document.getElementById('password').addEventListener('input', (e) => {
+    const pass = e.target.value;
+    const strengthText = document.getElementById('strengthText');
+    let strength = 0;
+    if(pass.length >= 8) strength++;
+    if(/[a-z]/.test(pass) && /[A-Z]/.test(pass)) strength++;
+    if(/[0-9]/.test(pass)) strength++;
+    if(/[!@#$%^&*]/.test(pass)) strength++;
+    
+    const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+    const classes = ['', 'strength-weak', 'strength-fair', 'strength-good', 'strength-good'];
+    strengthText.textContent = labels[strength] || 'Very Weak';
+    strengthText.className = 'password-strength ' + (classes[strength] || 'strength-weak');
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if(password.length < 8) return alert('Password must be at least 8 characters');
+    if(password !== confirmPassword) return alert('Passwords do not match');
+
+    const users = loadStorage('users', []);
+    if(users.find(u => u.email === email)) return alert('Email already registered');
+
+    const userId = 'USER' + Date.now();
+    const user = {
+      id: userId,
+      fullName,
+      email,
+      phone,
+      password: btoa(password), // basic encoding (NOT production-safe)
+      createdAt: new Date().toISOString()
+    };
+    users.push(user);
+    saveStorage('users', users);
+    
+    // Auto login
+    const session = {
+      userId,
+      fullName,
+      email,
+      phone,
+      loginAt: new Date().toISOString()
+    };
+    saveStorage('user_session', session);
+    alert('Registration successful! Redirecting...');
+    location.href = 'index.html';
+  });
+</script>
+</body>
+</html>

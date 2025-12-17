@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d4a574;
+      --secondary-color: #8b4513;
+      --dark-bg: #1a1a1a;
+    }
+    body { background: #f8f9fa; }
+    .navbar {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .navbar-brand {
+      color: var(--primary-color) !important;
+      font-weight: 700;
+    }
+    .nav-link:hover { color: var(--primary-color) !important; }
+    .sidebar {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 80px;
+    }
+    .sidebar h5 {
+      color: var(--secondary-color);
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .menu-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .menu-item:hover {
+      background: #f0f0f0;
+      color: var(--primary-color);
+    }
+    .menu-item.active {
+      background: var(--primary-color);
+      color: white;
+    }
+    .panel {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+    .panel.active { display: block; }
+    .review-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-left: 4px solid var(--primary-color);
+      margin-bottom: 12px;
+      border-radius: 6px;
+    }
+    .review-item.pending { border-left-color: #ffc107; }
+    .review-item.approved { border-left-color: #28a745; }
+    .review-item.rejected { border-left-color: #dc3545; }
+    .btn-approve { background: #28a745; border: none; }
+    .btn-reject { background: #dc3545; border: none; }
+    .stats-box {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container-lg">
+    <a class="navbar-brand" href="index.html"><i class="fas fa-sari me-2"></i>Indian Cloths Admin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="products.html">Store</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><button class="nav-link btn btn-link" id="logoutBtn">Logout</button></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-lg py-5">
+  <!-- Auth Modal -->
+  <div id="authModal" class="modal show d-flex align-items-center justify-content-center" style="display:flex;background:rgba(0,0,0,0.5);position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999">
+    <div class="modal-dialog" style="max-width:400px">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Admin Login</h5>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input id="adminPass" type="password" class="form-control" placeholder="Enter admin password">
+          </div>
+          <small class="text-muted">Demo password: <code>shiv@123@123</code></small>
+        </div>
+        <div class="modal-footer">
+          <button id="loginBtn" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none">
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="stats-box">
+          <h6>Pending Reviews</h6>
+          <h3 id="pendingCount">0</h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-box">
+          <h6>Approved Reviews</h6>
+          <h3 id="approvedCount">0</h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-box">
+          <h6>Total Reviews</h6>
+          <h3 id="totalCount">0</h3>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-box">
+          <h6>Total Users</h6>
+          <h3 id="usersCount">0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Sidebar Menu -->
+      <div class="col-md-3">
+        <div class="sidebar">
+          <h5><i class="fas fa-cog me-2"></i>Menu</h5>
+          <div class="menu-item active" data-panel="reviews">
+            <i class="fas fa-star me-2"></i>Review Moderation
+          </div>
+          <div class="menu-item" data-panel="feedback">
+            <i class="fas fa-comments me-2"></i>User Feedback
+          </div>
+          <div class="menu-item" data-panel="orders">
+            <i class="fas fa-boxes me-2"></i>Orders
+          </div>
+          <div class="menu-item" data-panel="fulfillment">
+            <i class="fas fa-shipping-fast me-2"></i>Fulfillment
+          </div>
+          <div class="menu-item" data-panel="analytics">
+            <i class="fas fa-chart-line me-2"></i>Analytics
+          </div>
+          <div class="menu-item" data-panel="export">
+            <i class="fas fa-download me-2"></i>Export Data
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Panels -->
+      <div class="col-md-9">
+        <!-- Reviews Panel -->
+        <div id="reviews" class="panel active">
+          <h4 class="mb-4"><i class="fas fa-star me-2"></i>Review Moderation</h4>
+          <div class="mb-3">
+            <input id="filterReview" type="text" class="form-control" placeholder="Search reviews...">
+          </div>
+          <div id="reviewsList"></div>
+        </div>
+
+        <!-- Feedback Panel -->
+        <div id="feedback" class="panel">
+          <h4 class="mb-4"><i class="fas fa-comments me-2"></i>User Feedback</h4>
+          <div id="feedbackList"></div>
+        </div>
+
+        <!-- Export Panel -->
+        <div id="export" class="panel">
+          <h4 class="mb-4"><i class="fas fa-download me-2"></i>Export Data</h4>
+          <p>Download your data in JSON format for backup or analysis.</p>
+          <button id="exportReviewsBtn" class="btn btn-primary me-2"><i class="fas fa-download me-1"></i>Export Reviews</button>
+          <button id="exportFeedbackBtn" class="btn btn-primary"><i class="fas fa-download me-1"></i>Export Feedback</button>
+        </div>
+
+        <!-- Orders Panel -->
+        <div id="orders" class="panel">
+          <h4 class="mb-4"><i class="fas fa-boxes me-2"></i>New Orders</h4>
+          <div class="mb-3">
+            <input id="filterOrders" type="text" class="form-control" placeholder="Search orders by name, email, or order id...">
+          </div>
+          <div class="mb-3">
+            <button id="seedDemoBtn" class="btn btn-sm btn-outline-primary">Seed Demo Orders</button>
+            <small class="text-muted ms-2">(admin only)</small>
+          </div>
+          <div id="ordersList"></div>
+        </div>
+
+        <!-- Order Fulfillment Panel -->
+        <div id="fulfillment" class="panel">
+          <h4 class="mb-4"><i class="fas fa-shipping-fast me-2"></i>Order Fulfillment</h4>
+          <div class="mb-3">
+            <select id="statusFilter" class="form-select">
+              <option value="">All Orders</option>
+              <option value="new">New</option>
+              <option value="packed">Packed</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+            </select>
+          </div>
+          <div id="fulfillmentList"></div>
+        <!-- Analytics Panel -->
+        <div id="analytics" class="panel">
+          <h4 class="mb-4"><i class="fas fa-chart-line me-2"></i>Analytics & Revenue</h4>
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="stats-box">
+                <h6>Total Revenue</h6>
+                <h3 id="totalRevenue">₹0</h3>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stats-box">
+                <h6>Total Profit</h6>
+                <h3 id="totalProfit">₹0</h3>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stats-box">
+                <h6>Total Orders</h6>
+                <h3 id="totalOrders">0</h3>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <canvas id="revenueChart" height="120"></canvas>
+          </div>
+          <div>
+            <button id="syncApiBtn" class="btn btn-outline-secondary me-2">Sync with API</button>
+            <small class="text-muted">(Placeholder — will call server API in next phase)</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  // ===== SECURITY CONFIG =====
+  const ADMIN_PASS = 'shiv@123@123'; // Plain password for local admin
+  const SECURITY_SALT = 'IndianCloths_Admin_2025_Secure';
+  const MAX_LOGIN_ATTEMPTS = 5;
+  const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
+  const SESSION_DURATION = 60 * 60 * 1000; // 1 hour
+  
+  let isAdmin = false;
+  let sessionToken = null;
+  let loginAttempts = 0;
+  let lockoutTime = null;
+  
+  const authModal = document.getElementById('authModal');
+  const dashboard = document.getElementById('dashboard');
+
+  // ===== SECURITY UTILITIES =====
+  function generateSessionToken() {
+    const timestamp = Date.now().toString();
+    const random = Math.random().toString(36).substring(2, 15);
+    const combined = timestamp + random + SECURITY_SALT;
+    try {
+      return CryptoJS.SHA256(combined).toString();
+    } catch(e) {
+      // Fallback if CryptoJS not loaded
+      return btoa(combined).substring(0, 64);
+    }
+  }
+
+  function getDeviceFingerprint() {
+    const nav = navigator.userAgent + navigator.language;
+    try {
+      return CryptoJS.SHA256(nav + SECURITY_SALT).toString().substring(0, 16);
+    } catch(e) {
+      return btoa(nav).substring(0, 16);
+    }
+  }
+
+  function isLocked() {
+    const lock = localStorage.getItem('admin_lockout');
+    if(!lock) return false;
+    try {
+      const lockData = JSON.parse(lock);
+      if(Date.now() - lockData.timestamp < LOCKOUT_TIME) {
+        return true;
+      }
+    } catch(e) {}
+    localStorage.removeItem('admin_lockout');
+    return false;
+  }
+
+  function recordLoginAttempt(success) {
+    if(success) {
+      localStorage.removeItem('admin_attempts');
+      localStorage.removeItem('admin_lockout');
+      loginAttempts = 0;
+      // record auth success
+      const logs = loadStorage('auth_logs', []);
+      logs.push({type: 'login_success', at: new Date().toISOString(), fingerprint: getDeviceFingerprint()});
+      saveStorage('auth_logs', logs);
+    } else {
+      loginAttempts++;
+      localStorage.setItem('admin_attempts', loginAttempts);
+      // record auth failure
+      const logs = loadStorage('auth_logs', []);
+      logs.push({type: 'login_failed', at: new Date().toISOString(), attempts: loginAttempts});
+      saveStorage('auth_logs', logs);
+      if(loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+        const lockData = {timestamp: Date.now(), attempts: loginAttempts};
+        localStorage.setItem('admin_lockout', JSON.stringify(lockData));
+        alert(`❌ Too many failed attempts. Account locked for 15 minutes.`);
+      } else {
+        const remaining = MAX_LOGIN_ATTEMPTS - loginAttempts;
+        alert(`❌ Incorrect password. ${remaining} attempt${remaining > 1 ? 's' : ''} remaining.`);
+      }
+    }
+  }
+
+  function validateSession() {
+    const session = localStorage.getItem('admin_session');
+    if(!session) return false;
+    try {
+      const data = JSON.parse(session);
+      if(Date.now() - data.created > SESSION_DURATION) {
+        localStorage.removeItem('admin_session');
+        return false;
+      }
+      if(data.fingerprint !== getDeviceFingerprint()) {
+        console.warn('⚠️ Device fingerprint mismatch detected');
+        localStorage.removeItem('admin_session');
+        return false;
+      }
+      sessionToken = data.token;
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+
+  // ===== LOGIN HANDLER =====
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    if(isLocked()) {
+      alert('Account temporarily locked. Try again in 15 minutes.');
+      return;
+    }
+
+    const pass = document.getElementById('adminPass').value.trim();
+
+    if(pass === ADMIN_PASS) {
+      isAdmin = true;
+      sessionToken = generateSessionToken();
+      const sessionData = {
+        token: sessionToken,
+        created: Date.now(),
+        fingerprint: getDeviceFingerprint()
+      };
+      localStorage.setItem('admin_session', JSON.stringify(sessionData));
+      recordLoginAttempt(true);
+      document.getElementById('adminPass').value = '';
+      
+      // Force UI update
+      authModal.style.display = 'none !important';
+      dashboard.style.display = 'block !important';
+      authModal.classList.add('d-none');
+      dashboard.classList.remove('d-none');
+      
+      console.log('✅ Admin logged in');
+      loadDashboard();
+    } else {
+      recordLoginAttempt(false);
+    }
+  });
+
+  // ===== LOGOUT & SESSION HANDLING =====
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    isAdmin = false;
+    sessionToken = null;
+    localStorage.removeItem('admin_session');
+    const logs = loadStorage('auth_logs', []);
+    logs.push({type: 'logout', at: new Date().toISOString()});
+    saveStorage('auth_logs', logs);
+    authModal.style.display = 'flex';
+    dashboard.style.display = 'none';
+    document.getElementById('adminPass').value = '';
+  });
+
+  // Load protected dashboard functions
+  function protectedAction(callback) {
+    if(!isAdmin || !validateSession()) {
+      alert('Session expired. Please login again.');
+      isAdmin = false;
+      sessionToken = null;
+      localStorage.removeItem('admin_session');
+      authModal.style.display = 'flex';
+      dashboard.style.display = 'none';
+      return false;
+    }
+    return callback();
+  }
+
+  function loadStorage(key, def) {
+    try { return JSON.parse(localStorage.getItem(key)) || def; } catch(e) { return def; }
+  }
+
+  function saveStorage(key, val) {
+    localStorage.setItem(key, JSON.stringify(val));
+  }
+
+  function loadDashboard() {
+    const reviews = loadStorage('reviews', {});
+    const feedback = loadStorage('feedback', []);
+    const approved = loadStorage('approvedReviews', {});
+
+    let pending = 0, total = 0;
+    for(let pid in reviews) {
+      const pReviews = reviews[pid] || [];
+      total += pReviews.length;
+      pending += pReviews.filter(r => !(approved[pid] && approved[pid].includes(r.user))).length;
+    }
+
+    document.getElementById('pendingCount').textContent = pending;
+    document.getElementById('approvedCount').textContent = total - pending;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('usersCount').textContent = Object.keys(reviews).length;
+
+    renderReviews(reviews, approved);
+    renderFeedback(feedback);
+    // also update orders and analytics panels
+    try { renderOrders(); computeTotalsAndRender(); } catch(e) { console.warn('Orders or analytics not ready', e); }
+  }
+
+  function renderReviews(reviews, approved) {
+    const list = document.getElementById('reviewsList');
+    const filter = document.getElementById('filterReview').value.toLowerCase();
+    let html = '';
+    for(let pid in reviews) {
+      (reviews[pid] || []).forEach(r => {
+        const isApproved = approved[pid] && approved[pid].includes(r.user);
+        const status = isApproved ? 'approved' : 'pending';
+        if(filter && !r.comment.toLowerCase().includes(filter)) return;
+        html += `
+          <div class="review-item ${status}">
+            <strong>Product ${pid}</strong> | <strong>${r.user}</strong> 
+            <span class="text-warning">${'★'.repeat(r.rating)}</span>
+            <div class="mt-2">${r.comment}</div>
+            <small class="text-muted">${r.date || ''}</small>
+            ${!isApproved ? `
+              <div class="mt-2">
+                <button class="btn btn-sm btn-approve me-2" onclick="approveReview('${pid}','${r.user}')"><i class="fas fa-check"></i> Approve</button>
+                <button class="btn btn-sm btn-reject" onclick="deleteReview('${pid}','${r.user}')"><i class="fas fa-trash"></i> Reject</button>
+              </div>
+            ` : '<div class="mt-2"><span class="badge bg-success">Approved</span></div>'}
+          </div>
+        `;
+      });
+    }
+    list.innerHTML = html || '<p class="text-muted">No reviews.</p>';
+  }
+
+  function approveReview(pid, user) {
+    return protectedAction(() => {
+      const approved = loadStorage('approvedReviews', {});
+      approved[pid] = approved[pid] || [];
+      if(!approved[pid].includes(user)) approved[pid].push(user);
+      saveStorage('approvedReviews', approved);
+      console.log(`✅ Review approved: Product ${pid} by ${user}`);
+      loadDashboard();
+      return true;
+    });
+  }
+
+  function deleteReview(pid, user) {
+    return protectedAction(() => {
+      if(!confirm('❌ Delete this review permanently?')) return false;
+      const reviews = loadStorage('reviews', {});
+      if(reviews[pid]) reviews[pid] = reviews[pid].filter(r => r.user !== user);
+      saveStorage('reviews', reviews);
+      console.log(`🗑️ Review deleted: Product ${pid} by ${user}`);
+      loadDashboard();
+      return true;
+    });
+  }
+
+  function renderFeedback(feedback) {
+    const list = document.getElementById('feedbackList');
+    if(!feedback || feedback.length === 0) {
+      list.innerHTML = '<p class="text-muted">No feedback.</p>';
+      return;
+    }
+    list.innerHTML = feedback.map(f => `
+      <div class="review-item">
+        <strong>${f.user}</strong> | <a href="mailto:${f.email}">${f.email}</a>
+        <div class="mt-2">${f.message}</div>
+        <small class="text-muted">${f.date || ''}</small>
+      </div>
+    `).join('');
+  }
+
+  /* ===== ORDERS & ANALYTICS ===== */
+  function loadOrders() {
+    return loadStorage('orders', []);
+  }
+
+  function renderOrders() {
+    const list = document.getElementById('ordersList');
+    const filter = document.getElementById('filterOrders').value.toLowerCase();
+    const orders = loadOrders();
+    if(!orders || orders.length === 0) {
+      list.innerHTML = '<p class="text-muted">No orders found.</p>';
+      return;
+    }
+    let html = '';
+    orders.forEach(order => {
+      const matches = !filter || (
+        (order.customer && (order.customer.name||'').toLowerCase().includes(filter)) ||
+        (order.customer && (order.customer.email||'').toLowerCase().includes(filter)) ||
+        (''+order.id).toLowerCase().includes(filter)
+      );
+      if(!matches) return;
+
+      const itemsHtml = (order.items || []).map(it => `
+        <div><strong>${it.name}</strong> x ${it.qty} — ₹${it.price} each</div>
+      `).join('');
+
+      const customer = order.customer || {};
+      html += `
+        <div class="review-item">
+          <div class="d-flex justify-content-between">
+            <div><strong>Order #${order.id}</strong> — <small class="text-muted">${order.date || ''}</small></div>
+            <div><strong>₹${order.total}</strong></div>
+          </div>
+          <div class="mt-2">${itemsHtml}</div>
+          <hr />
+          <div><strong>Customer:</strong> ${customer.name || '-'} | ${customer.phone || '-'} | ${customer.email || '-'}</div>
+          <div><strong>Address:</strong> ${customer.address || '-'}, ${customer.city || '-'}, ${customer.state || '-'}, ${customer.country || '-'} — ${customer.pincode || '-'}</div>
+          <div class="mt-2"><small class="text-muted">Payment: ${order.payment_method || 'N/A'} | Status: <strong>${(order.status || 'new').toUpperCase()}</strong></small></div>
+        </div>
+      `;
+    });
+    list.innerHTML = html || '<p class="text-muted">No matching orders.</p>';
+  }
+
+  function renderFulfillment() {
+    const list = document.getElementById('fulfillmentList');
+    const filterStatus = document.getElementById('statusFilter').value.toLowerCase();
+    const orders = loadOrders();
+    if(!orders || orders.length === 0) {
+      list.innerHTML = '<p class="text-muted">No orders found.</p>';
+      return;
+    }
+    let html = '';
+    orders.forEach(order => {
+      const status = (order.status || 'new').toLowerCase();
+      if(filterStatus && status !== filterStatus) return;
+
+      const itemsHtml = (order.items || []).map(it => `
+        <div><small>${it.name} x ${it.qty}</small></div>
+      `).join('');
+
+      const customer = order.customer || {};
+      const statusColors = { 'new': 'warning', 'packed': 'info', 'shipped': 'primary', 'delivered': 'success' };
+      const statusColor = statusColors[status] || 'secondary';
+
+      html += `
+        <div class="review-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <strong>#${order.id}</strong>
+              <span class="badge bg-${statusColor} ms-2">${status.toUpperCase()}</span>
+            </div>
+            <strong>₹${order.total}</strong>
+          </div>
+          <small class="text-muted d-block mt-1">${new Date(order.date).toLocaleDateString()}</small>
+          <div class="mt-2">${itemsHtml}</div>
+          <div class="mt-2"><strong>${customer.name}</strong> | ${customer.phone} | ${customer.address}, ${customer.city}</div>
+          <div class="mt-3">
+            ${status !== 'packed' ? `<button class="btn btn-sm btn-warning" onclick="updateOrderStatus('${order.id}', 'packed')"><i class="fas fa-box"></i> Pack</button>` : ''}
+            ${status !== 'shipped' ? `<button class="btn btn-sm btn-info" onclick="updateOrderStatus('${order.id}', 'shipped')"><i class="fas fa-truck"></i> Ship</button>` : ''}
+            ${status !== 'delivered' ? `<button class="btn btn-sm btn-success" onclick="updateOrderStatus('${order.id}', 'delivered')"><i class="fas fa-check"></i> Delivered</button>` : '<span class="badge bg-success">Completed</span>'}
+          </div>
+        </div>
+      `;
+    });
+    list.innerHTML = html || '<p class="text-muted">No matching orders.</p>';
+  }
+
+  function updateOrderStatus(orderId, newStatus) {
+    return protectedAction(() => {
+      const orders = loadOrders();
+      const order = orders.find(o => o.id === orderId);
+      if(!order) return alert('Order not found');
+      order.status = newStatus;
+      saveStorage('orders', orders);
+      alert(`Order ${orderId} marked as ${newStatus}`);
+      renderFulfillment();
+      renderOrders();
+      return true;
+    });
+  }
+
+  function computeTotalsAndRender() {
+    const orders = loadOrders();
+    let totalRevenue = 0, totalProfit = 0, totalOrders = (orders||[]).length;
+    const revenueByDay = {};
+    (orders||[]).forEach(o => {
+      const t = Number(o.total) || 0;
+      totalRevenue += t;
+      // assume profit = 30% of order total for now (placeholder)
+      totalProfit += t * 0.30;
+      const day = (o.date || '').split('T')[0] || 'unknown';
+      revenueByDay[day] = (revenueByDay[day] || 0) + t;
+    });
+
+    document.getElementById('totalRevenue').textContent = '₹' + totalRevenue.toFixed(2);
+    document.getElementById('totalProfit').textContent = '₹' + totalProfit.toFixed(2);
+    document.getElementById('totalOrders').textContent = totalOrders;
+
+    renderRevenueChart(revenueByDay);
+  }
+
+  let revenueChart = null;
+  function renderRevenueChart(revenueByDay) {
+    const ctx = document.getElementById('revenueChart');
+    const labels = Object.keys(revenueByDay).sort();
+    const data = labels.map(l => revenueByDay[l]);
+    const chartData = {
+      labels,
+      datasets: [{
+        label: 'Revenue',
+        data,
+        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+        borderColor: 'rgba(52, 152, 219, 1)',
+        borderWidth: 2,
+        tension: 0.3,
+        fill: true
+      }]
+    };
+    if(revenueChart) {
+      revenueChart.data = chartData;
+      revenueChart.update();
+      return;
+    }
+    revenueChart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  }
+
+  document.getElementById('filterOrders').addEventListener('input', () => renderOrders());
+  document.getElementById('statusFilter').addEventListener('change', () => renderFulfillment());
+  document.getElementById('syncApiBtn').addEventListener('click', () => {
+    protectedAction(() => {
+      // Placeholder: in next phase call server endpoint to sync orders
+      alert('Sync placeholder: will call API in next phase');
+    });
+  });
+
+  // Seed demo orders for testing
+  document.getElementById('seedDemoBtn').addEventListener('click', () => {
+    protectedAction(() => {
+      const sampleOrders = [
+        {
+          id: 'ORD' + (Date.now()-20000),
+          date: new Date(Date.now()-86400000).toISOString(),
+          items: [{id:1,name:'Silk Saree',qty:1,price:3499}],
+          subtotal:3499, tax: Math.round(3499*0.18*100)/100, shipping:0, total: Math.round((3499+3499*0.18)*100)/100,
+          payment_method:'Credit/Debit Card',
+          customer:{name:'Meera Patel',email:'meera@example.com',phone:'+919812345670',address:'12 Gandhi St',city:'Gandhidham',state:'Gujarat',country:'India',pincode:'370201'}
+        },
+        {
+          id: 'ORD' + (Date.now()-10000),
+          date: new Date().toISOString(),
+          items: [{id:2,name:'Cotton Kurta',qty:2,price:1299}],
+          subtotal:2598, tax: Math.round(2598*0.18*100)/100, shipping:50, total: Math.round((2598+2598*0.18+50)*100)/100,
+          payment_method:'UPI',
+          customer:{name:'Rahul Sharma',email:'rahul@example.com',phone:'+919876543210',address:'45 Market Rd',city:'Ahmedabad',state:'Gujarat',country:'India',pincode:'380015'}
+        }
+      ];
+      const existing = loadStorage('orders', []);
+      const merged = existing.concat(sampleOrders);
+      saveStorage('orders', merged);
+      alert('Seeded ' + sampleOrders.length + ' demo orders');
+      try { renderOrders(); computeTotalsAndRender(); } catch(e) {}
+      return true;
+    });
+  });
+
+  document.getElementById('filterReview').addEventListener('input', () => {
+    const reviews = loadStorage('reviews', {});
+    const approved = loadStorage('approvedReviews', {});
+    renderReviews(reviews, approved);
+  });
+
+  document.getElementById('exportReviewsBtn').addEventListener('click', () => {
+    protectedAction(() => {
+      const data = loadStorage('reviews', {});
+      const exportData = {
+        exported_at: new Date().toISOString(),
+        exported_by: 'admin',
+        device_fingerprint: getDeviceFingerprint(),
+        data: data
+      };
+      download(JSON.stringify(exportData, null, 2), 'reviews_' + Date.now() + '.json', 'application/json');
+      console.log('📥 Reviews exported');
+      return true;
+    });
+  });
+
+  document.getElementById('exportFeedbackBtn').addEventListener('click', () => {
+    protectedAction(() => {
+      const data = loadStorage('feedback', []);
+      const exportData = {
+        exported_at: new Date().toISOString(),
+        exported_by: 'admin',
+        device_fingerprint: getDeviceFingerprint(),
+        data: data
+      };
+      download(JSON.stringify(exportData, null, 2), 'feedback_' + Date.now() + '.json', 'application/json');
+      console.log('📥 Feedback exported');
+      return true;
+    });
+  });
+
+  function download(content, filename, type) {
+    const blob = new Blob([content], {type});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Menu switching
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', e => {
+      document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      const panelId = e.currentTarget.dataset.panel;
+      document.getElementById(panelId).classList.add('active');
+    });
+  });
+
+  // ===== INITIAL PAGE LOAD =====
+  window.addEventListener('load', () => {
+    if(validateSession()) {
+      isAdmin = true;
+      authModal.style.display = 'none';
+      dashboard.style.display = 'block';
+      loadDashboard();
+      console.log('✅ Admin session restored');
+    } else {
+      authModal.style.display = 'flex';
+      dashboard.style.display = 'none';
+      console.log('ℹ️ Admin login required');
+    }
+  });
+
+  // ===== SECURITY: Log suspicious activity =====
+  document.addEventListener('keypress', (e) => {
+    if(e.key === 'Enter' && document.activeElement.id === 'adminPass') {
+      document.getElementById('loginBtn').click();
+    }
+  });
+
+  // Log page visibility changes (detect tampering)
+  document.addEventListener('visibilitychange', () => {
+    if(document.hidden) {
+      console.log('⚠️ Page hidden');
+    }
+  });
+
+  // Listen to storage events so admin refreshes when orders or reviews change in another tab
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'orders' || e.key === 'reviews' || e.key === 'feedback' || e.key === 'approvedReviews') {
+      console.log('🔄 Detected storage change', e.key);
+      if(validateSession()) { loadDashboard(); }
+    }
+  });
+</script>
+
+<!-- Footer -->
+<footer class="bg-dark text-white mt-5 pt-5">
+  <div class="container-lg">
+    <div class="row mb-4">
+      <div class="col-md-3 mb-4">
+        <h5 class="text-warning mb-3"><i class="fas fa-link me-2"></i>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="index.html" class="text-decoration-none text-white-50"><i class="fas fa-home me-2"></i>Home</a></li>
+          <li><a href="products.html" class="text-decoration-none text-white-50"><i class="fas fa-shopping-bag me-2"></i>Products</a></li>
+          <li><a href="cart.html" class="text-decoration-none text-white-50"><i class="fas fa-shopping-cart me-2"></i>Cart</a></li>
+          <li><a href="my-orders.html" class="text-decoration-none text-white-50"><i class="fas fa-box me-2"></i>My Orders</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h5 class="text-warning mb-3"><i class="fas fa-info-circle me-2"></i>Company</h5>
+        <ul class="list-unstyled">
+          <li><a href="about.html" class="text-decoration-none text-white-50"><i class="fas fa-building me-2"></i>About Us</a></li>
+          <li><a href="contact.html" class="text-decoration-none text-white-50"><i class="fas fa-envelope me-2"></i>Contact</a></li>
+          <li><a href="admin.html" class="text-decoration-none text-white-50"><i class="fas fa-lock me-2"></i>Admin Panel</a></li>
+          <li><a href="auth.html" class="text-decoration-none text-white-50"><i class="fas fa-user me-2"></i>Login/Register</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h5 class="text-warning mb-3"><i class="fas fa-concierge-bell me-2"></i>Services</h5>
+        <ul class="list-unstyled">
+          <li><a href="products.html" class="text-decoration-none text-white-50"><i class="fas fa-shirt me-2"></i>Women Wear</a></li>
+          <li><a href="products.html" class="text-decoration-none text-white-50"><i class="fas fa-vest me-2"></i>Men Wear</a></li>
+          <li><a href="products.html" class="text-decoration-none text-white-50"><i class="fas fa-person me-2"></i>Kids Fashion</a></li>
+          <li><a href="checkout.html" class="text-decoration-none text-white-50"><i class="fas fa-credit-card me-2"></i>Checkout</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h5 class="text-warning mb-3"><i class="fas fa-phone me-2"></i>Contact Us</h5>
+        <ul class="list-unstyled">
+          <li><i class="fas fa-envelope text-warning me-2"></i>indianclothes@gmail.com</li>
+          <li><i class="fas fa-phone text-warning me-2"></i>+91 9999999999</li>
+          <li><i class="fas fa-map-marker-alt text-warning me-2"></i>India</li>
+          <li class="mt-3">
+            <a href="#" class="text-white-50 me-3"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-white-50 me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white-50 me-3"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white-50"><i class="fab fa-youtube"></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <hr class="bg-white-50">
+    <div class="row align-items-center py-4">
+      <div class="col-md-6">
+        <p class="mb-0"><i class="fas fa-copyright text-warning"></i> 2025 Indian Cloths. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <p class="mb-0">
+          <a href="products.html" class="text-white-50 text-decoration-none me-3">Privacy</a> |
+          <a href="contact.html" class="text-white-50 text-decoration-none me-3">Terms</a> |
+          <a href="about.html" class="text-white-50 text-decoration-none">Sitemap</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

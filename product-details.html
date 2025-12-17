@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Details - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #d4a574;
+      --secondary-color: #8b4513;
+      --dark-bg: #1a1a1a;
+    }
+    .navbar {
+      background: linear-gradient(135deg, var(--dark-bg), #2a2a2a) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .navbar-brand {
+      color: var(--primary-color) !important;
+      font-weight: 700 !important;
+      font-size: 1.5rem !important;
+    }
+    .nav-link {
+      color: #fff !important;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: var(--primary-color) !important;
+    }
+    .thumbs img { width:56px; height:56px; object-fit:cover; border-radius:6px; cursor:pointer; margin-right:8px }
+    .main-img { width:100%; height:420px; object-fit:cover; border-radius:8px }
+    .review { background:#fff; padding:12px; border-radius:8px; margin-bottom:10px }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a)">
+  <div class="container-lg">
+    <a class="navbar-brand" href="index.html"><i class="fas fa-sari me-2"></i>Indian Cloths</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item" id="userMenuDiv" style="display:none;">
+          <a class="nav-link" href="my-orders.html"><i class="fas fa-box"></i> Orders</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="admin.html"><i class="fas fa-lock"></i> Admin</a></li>
+        <li class="nav-item" id="authMenuDiv">
+          <a class="nav-link" href="auth.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+        <li class="nav-item" id="logoutDiv" style="display:none;">
+          <a class="nav-link" href="#" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="container my-5">
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div id="gallery">
+        <img id="mainImage" class="main-img rounded" src="" alt="">
+        <div class="d-flex mt-3 thumbs" id="thumbs"></div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h2 id="pName"></h2>
+      <p class="text-muted" id="pCategory"></p>
+      <h4 class="text-danger" id="pPrice"></h4>
+      <p id="pDesc">High-quality fabrics and authentic craftsmanship.</p>
+
+      <div class="row gx-2 gy-2 align-items-center mb-3">
+        <div class="col-6">
+          <label class="form-label">Color</label>
+          <select id="colorSelect" class="form-select"></select>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Size</label>
+          <select id="sizeSelect" class="form-select"></select>
+        </div>
+        <div class="col-4 mt-3">
+          <label class="form-label">Qty</label>
+          <input id="qtyInput" type="number" class="form-control" value="1" min="1">
+        </div>
+        <div class="col-12 mt-3">
+          <button id="addCartBtn" class="btn btn-primary me-2"><i class="fas fa-shopping-bag me-1"></i>Add to Cart</button>
+          <a href="products.html" class="btn btn-outline-secondary">Back to Products</a>
+        </div>
+      </div>
+
+      <hr>
+      <h5>Product Details</h5>
+      <ul id="pDetails">
+        <li>100% handpicked fabric</li>
+        <li>Care instructions on label</li>
+        <li>Free standard shipping on orders over ₹999</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <h4>Reviews</h4>
+      <div id="reviewsList"></div>
+
+      <h5 class="mt-4">Leave a review</h5>
+      <form id="reviewForm" class="mb-5">
+        <div class="mb-2">
+          <input id="reviewName" class="form-control" placeholder="Your name" required>
+        </div>
+        <div class="mb-2">
+          <select id="reviewRating" class="form-select" required>
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Very good</option>
+            <option value="3">3 - Good</option>
+            <option value="2">2 - Fair</option>
+            <option value="1">1 - Poor</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <textarea id="reviewComment" class="form-control" rows="3" placeholder="Your review" required></textarea>
+        </div>
+        <button class="btn btn-success">Submit Review</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<footer class="bg-dark text-white text-center py-3 mt-5">
+  <div class="container-lg">
+    <p class="mb-1">&copy; 2025 Indian Cloths</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const productsUrl = 'products.json';
+
+  function qs(name){
+    return new URLSearchParams(location.search).get(name);
+  }
+
+  function loadFromStorage(key, def){
+    try{ return JSON.parse(localStorage.getItem(key)) || def }catch(e){return def}
+  }
+
+  function saveToStorage(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+  async function init(){
+    const id = parseInt(qs('id')) || null;
+    if(!id){ document.getElementById('pName').textContent = 'Product not found'; return; }
+    try{
+      const res = await fetch(productsUrl);
+      const data = await res.json();
+      const items = Array.isArray(data) ? data : (data.products || []);
+      const product = items.find(p=>p.id===id);
+      if(!product){ document.getElementById('pName').textContent = 'Product not found'; return; }
+      renderProduct(product);
+      setupReviewForm(product.id);
+    }catch(err){ console.error(err); document.getElementById('pName').textContent='Could not load product'; }
+  }
+
+  function renderProduct(p){
+    document.getElementById('pName').textContent = p.name;
+    document.getElementById('pCategory').textContent = p.category || '';
+    document.getElementById('pPrice').textContent = `₹${p.price}`;
+    const main = document.getElementById('mainImage');
+    const thumbs = document.getElementById('thumbs');
+    const imgs = (p.images && p.images.length) ? p.images : (p.image? [p.image]: []);
+    main.src = imgs[0] || '';
+    thumbs.innerHTML = imgs.map((src,idx)=>`<img src="${src}" data-idx="${idx}" class="thumb" alt="thumb">`).join('');
+    thumbs.querySelectorAll('img').forEach(img=> img.addEventListener('click', e=> { main.src = e.target.src }));
+
+    // colors
+    const colorSelect = document.getElementById('colorSelect');
+    colorSelect.innerHTML = (p.colors && p.colors.length) ? p.colors.map(c=>`<option>${c}</option>`).join('') : '<option>Default</option>';
+    // sizes
+    const sizeSelect = document.getElementById('sizeSelect');
+    sizeSelect.innerHTML = (p.sizes && p.sizes.length) ? p.sizes.map(s=>`<option>${s}</option>`).join('') : '<option>One Size</option>';
+
+    // reviews
+    renderReviews(p.id, p.reviews || []);
+
+    document.getElementById('addCartBtn').addEventListener('click', ()=>{
+      const session = loadFromStorage('user_session', null);
+      
+      if(!session) {
+        const result = confirm(`Please login to add "${p.name}" to cart. Click OK to go to login page.`);
+        if(result) {
+          location.href = 'auth.html';
+        }
+        return;
+      }
+
+      const color = colorSelect.value;
+      const size = sizeSelect.value;
+      const qty = Math.max(1, parseInt(document.getElementById('qtyInput').value)||1);
+      addToCart({ id: p.id, name: p.name, price: p.price, image: imgs[0]||p.image, color, size, qty });
+    });
+  }
+
+  function addToCart(item){
+    const cart = loadFromStorage('cart', []);
+    // merge if same id+color+size
+    const found = cart.find(c=> c.id===item.id && c.color===item.color && c.size===item.size);
+    if(found){ found.qty += item.qty } else { cart.push(item); }
+    saveToStorage('cart', cart);
+    console.log('[product] added to cart', item, 'cart now', cart);
+    // redirect to cart
+    location.href = 'cart.html';
+  }
+
+  function renderReviews(productId, baseReviews){
+    const list = document.getElementById('reviewsList');
+    const stored = loadFromStorage('reviews', {});
+    const mine = stored[productId] || [];
+    const combined = [...baseReviews, ...mine];
+    if(combined.length===0) list.innerHTML = '<p class="text-muted">No reviews yet.</p>';
+    else list.innerHTML = combined.map(r=>`<div class="review"><strong>${r.user}</strong> <span class="text-warning">${'★'.repeat(r.rating)}</span><div>${r.comment}</div><small class="text-muted">${r.date||''}</small></div>`).join('');
+  }
+
+  function setupReviewForm(productId){
+    const form = document.getElementById('reviewForm');
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      const name = document.getElementById('reviewName').value.trim();
+      const rating = parseInt(document.getElementById('reviewRating').value);
+      const comment = document.getElementById('reviewComment').value.trim();
+      if(!name || !comment) return alert('Please provide name and review');
+      const stored = loadFromStorage('reviews', {});
+      stored[productId] = stored[productId] || [];
+      const entry = { user: name, rating, comment, date: new Date().toISOString().slice(0,10) };
+      stored[productId].push(entry);
+      saveToStorage('reviews', stored);
+      renderReviews(productId, []);
+      form.reset();
+    });
+  }
+
+  init();
+
+  // Auth management
+  function checkUserSession() {
+    const session = loadFromStorage('user_session', null);
+    const authMenuDiv = document.getElementById('authMenuDiv');
+    const userMenuDiv = document.getElementById('userMenuDiv');
+    const logoutDiv = document.getElementById('logoutDiv');
+    
+    if(session) {
+      authMenuDiv.style.display = 'none';
+      userMenuDiv.style.display = 'block';
+      logoutDiv.style.display = 'block';
+    } else {
+      authMenuDiv.style.display = 'block';
+      userMenuDiv.style.display = 'none';
+      logoutDiv.style.display = 'none';
+    }
+  }
+  
+  function handleLogout() {
+    if(confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('user_session');
+      const logs = loadFromStorage('auth_logs', []);
+      logs.push({type: 'logout', at: new Date().toISOString()});
+      saveToStorage('auth_logs', logs);
+      alert('Logged out successfully!');
+      location.href = 'index.html';
+    }
+  }
+  
+  checkUserSession();
+  
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'user_session') {
+      checkUserSession();
+    }
+  });
+</script>
+
+<!-- Animated Footer -->
+<footer class="footer-animated">
+  <div class="footer-content">
+    <div class="container-lg">
+      <div class="footer-top">
+        <div class="row g-4">
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.1s">
+            <div class="footer-brand">
+              <h4 class="footer-title"><i class="fas fa-sari me-2"></i>Indian Cloths</h4>
+              <p class="footer-desc">Your trusted destination for authentic Indian fashion & traditional wear.</p>
+              <div class="footer-social">
+                <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.2s">
+            <h5 class="footer-title"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+              <li><a href="products.html"><i class="fas fa-chevron-right me-2"></i>Products</a></li>
+              <li><a href="cart.html"><i class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+              <li><a href="my-orders.html"><i class="fas fa-chevron-right me-2"></i>Track Orders</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.3s">
+            <h5 class="footer-title"><i class="fas fa-building me-2"></i>Company</h5>
+            <ul class="footer-links">
+              <li><a href="about.html"><i class="fas fa-chevron-right me-2"></i>About Us</a></li>
+              <li><a href="contact.html"><i class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+              <li><a href="admin.html"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+              <li><a href="auth.html"><i class="fas fa-chevron-right me-2"></i>Login/Register</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.4s">
+            <h5 class="footer-title"><i class="fas fa-headset me-2"></i>Contact Info</h5>
+            <div class="footer-contact">
+              <p class="contact-item"><i class="fas fa-envelope icon-primary"></i><span>indianclothes@gmail.com</span></p>
+              <p class="contact-item"><i class="fas fa-phone icon-primary"></i><span>+91 9999999999</span></p>
+              <p class="contact-item"><i class="fas fa-map-marker-alt icon-primary"></i><span>India</span></p>
+              <p class="contact-item"><i class="fas fa-clock icon-primary"></i><span>24/7 Available</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="copyright-text"><i class="fas fa-copyright me-1"></i> 2025 Indian Cloths. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="footer-legal-links">
+              <a href="products.html">Privacy Policy</a>
+              <span class="divider">|</span>
+              <a href="contact.html">Terms of Service</a>
+              <span class="divider">|</span>
+              <a href="about.html">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-animated{background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 50%,#1a1a1a 100%);color:#fff;padding:4rem 0 1rem;margin-top:5rem;position:relative;overflow:hidden;border-top:2px solid #d4a574}
+  .footer-animated::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#d4a574,transparent)}
+  .footer-content{position:relative;z-index:2}.footer-top{padding-bottom:3rem}.footer-section{animation:fadeInUp 0.8s ease forwards;opacity:0}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .footer-brand{padding:1rem 0}.footer-brand h4{color:#d4a574;font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;letter-spacing:1px}
+  .footer-desc{color:#b0b0b0;font-size:0.95rem;line-height:1.6;margin-bottom:1.5rem}
+  .footer-social{display:flex;gap:0.75rem}.social-icon{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(212,165,116,0.1);border:2px solid #d4a574;border-radius:50%;color:#d4a574;transition:all 0.3s ease}
+  .social-icon:hover{background:#d4a574;color:#1a1a1a;transform:translateY(-5px)}
+  .footer-title{color:#d4a574;font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;position:relative;padding-bottom:0.75rem}
+  .footer-title::after{content:'';position:absolute;bottom:0;left:0;width:40px;height:2px;background:#d4a574}
+  .footer-links{list-style:none;padding:0;margin:0}.footer-links li{margin-bottom:0.75rem}
+  .footer-links a{color:#b0b0b0;text-decoration:none;transition:all 0.3s ease;display:flex;align-items:center}
+  .footer-links a:hover{color:#d4a574;padding-left:5px}.footer-links i{color:#d4a574;font-size:0.75rem}
+  .footer-contact{display:flex;flex-direction:column;gap:1rem}.contact-item{display:flex;align-items:center;color:#b0b0b0;margin:0}
+  .icon-primary{color:#d4a574;width:24px;margin-right:1rem}
+  .footer-divider{height:1px;background:linear-gradient(90deg,transparent,#d4a574,transparent);margin:2rem 0}
+  .footer-bottom{padding:2rem 0 1rem}.copyright-text{color:#909090;margin:0;font-size:0.95rem}
+  .footer-legal-links{display:flex;justify-content:center;align-items:center;gap:1rem;flex-wrap:wrap}
+  .footer-legal-links a{color:#b0b0b0;text-decoration:none;transition:color 0.3s ease;font-size:0.95rem}
+  .footer-legal-links a:hover{color:#d4a574}.footer-legal-links .divider{color:#555}
+  @media(max-width:768px){.footer-animated{padding:2rem 0 1rem;margin-top:3rem}.footer-top{padding-bottom:2rem}.footer-section{margin-bottom:1.5rem}.footer-bottom{text-align:center}.footer-legal-links{justify-content:center;margin-top:1rem}}
+  .fade-in-up{animation:fadeInUp 0.8s ease forwards;opacity:0}
+</style>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout - Indian Cloths</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { --primary-color: #d4a574; --secondary-color: #8b4513; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f8f9fa; }
+    .navbar { background: linear-gradient(135deg, #1a1a1a, #2a2a2a) !important; }
+    .navbar-brand { color: var(--primary-color) !important; font-weight:700; }
+    .checkout-container { padding:3rem 0; }
+    .card { border-radius:12px; }
+    .btn-primary { background:var(--primary-color); border:none; }
+    .btn-primary:hover { background:var(--secondary-color); }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <div class="container-lg">
+    <a class="navbar-brand" href="index.html"><i class="fas fa-sari me-2"></i>Indian Cloths</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="products.html">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+        <li class="nav-item"><a class="nav-link active" href="checkout.html">Checkout</a></li>
+        <li class="nav-item" id="userMenuDiv" style="display:none;">
+          <a class="nav-link" href="my-orders.html"><i class="fas fa-box"></i> Orders</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="admin.html"><i class="fas fa-lock"></i> Admin</a></li>
+        <li class="nav-item" id="authMenuDiv">
+          <a class="nav-link" href="auth.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+        <li class="nav-item" id="logoutDiv" style="display:none;">
+          <a class="nav-link" href="#" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-lg checkout-container">
+  <div class="row g-4">
+    <div class="col-md-7">
+      <div class="card p-4">
+        <h4>Billing Details</h4>
+        <form id="checkoutForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name</label>
+              <input name="name" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input name="email" type="email" class="form-control" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Address</label>
+              <input name="address" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">City</label>
+              <input name="city" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">State</label>
+              <input name="state" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Postal Code</label>
+              <input name="pincode" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <div class="input-group">
+                <input name="phone" id="checkoutPhone" class="form-control" required>
+                <button id="sendOtpBtn" type="button" class="btn btn-outline-primary">Send OTP</button>
+              </div>
+              <div id="otpNotice" class="form-text text-muted">We will send an OTP to verify your phone (demo shows code in console).</div>
+            </div>
+            <div class="col-md-6" id="otpWrap" style="display:none">
+              <label class="form-label">Enter OTP</label>
+              <input id="otpInput" class="form-control" placeholder="6-digit OTP">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Payment Method</label>
+              <select name="payment_method" class="form-select">
+                <option>Credit/Debit Card</option>
+                <option>UPI</option>
+                <option>Net Banking</option>
+                <option>Cash on Delivery</option>
+              </select>
+            </div>
+            <div class="col-12 text-end">
+              <button id="placeOrderBtn" class="btn btn-primary">Place Order</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="card p-4">
+        <h5>Order Summary</h5>
+        <div id="orderSummaryList">
+          <p class="text-muted">Loading cart...</p>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between fw-bold">Total <span id="orderTotal">₹0</span></div>
+        <p class="text-muted small mt-3">By placing the order you agree to our Terms & Conditions and Privacy Policy.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function loadStorage(key, def){ try{ return JSON.parse(localStorage.getItem(key)) || def }catch(e){return def} }
+  function saveStorage(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+  function renderCheckoutSummary(){
+    const cart = loadStorage('cart', []);
+    const list = document.getElementById('orderSummaryList');
+    if(!cart || cart.length===0){ list.innerHTML = '<p class="text-muted">Your cart is empty.</p>'; document.getElementById('orderTotal').textContent = '₹0'; return; }
+    let html = '<ul class="list-unstyled">';
+    let subtotal = 0;
+    cart.forEach(it=>{ html += `<li class="d-flex justify-content-between">${it.name} x${it.qty} <span>₹${(it.price*it.qty).toFixed(2)}</span></li>`; subtotal += it.price*it.qty; });
+    html += '</ul>';
+    const tax = Math.round(subtotal * 0.18 * 100) / 100; // 18%
+    const shipping = subtotal >= 999 ? 0 : 50;
+    const total = Math.round((subtotal + tax + shipping) * 100) / 100;
+    html += `<div class="summary-row"><span>Subtotal</span><span>₹${subtotal.toFixed(2)}</span></div>`;
+    html += `<div class="summary-row"><span>Tax (18%)</span><span>₹${tax.toFixed(2)}</span></div>`;
+    html += `<div class="summary-row"><span>Shipping</span><span>₹${shipping.toFixed(2)}</span></div>`;
+    list.innerHTML = html;
+    document.getElementById('orderTotal').textContent = '₹' + total.toFixed(2);
+    // store computed totals in session for form submit
+    sessionStorage.setItem('checkout_summary', JSON.stringify({subtotal, tax, shipping, total}));
+  }
+
+  // OTP handling (demo): send code and verify before placing order
+  function generateOtp(phone) {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const payload = { code, phone, created: Date.now(), expires: Date.now() + 5*60*1000 };
+    sessionStorage.setItem('checkout_otp', JSON.stringify(payload));
+    console.log('Demo OTP for', phone, code);
+    return payload;
+  }
+
+  function verifyOtp(input) {
+    try {
+      const stored = JSON.parse(sessionStorage.getItem('checkout_otp'));
+      if(!stored) return { ok:false, msg:'No OTP sent' };
+      if(Date.now() > stored.expires) return { ok:false, msg:'OTP expired' };
+      if(stored.code === String(input)) return { ok:true };
+      return { ok:false, msg:'Invalid OTP' };
+    } catch(e) { return { ok:false, msg:'OTP error' }; }
+  }
+
+  document.getElementById('sendOtpBtn').addEventListener('click', () => {
+    const phone = document.getElementById('checkoutPhone').value.trim();
+    if(!phone) return alert('Enter phone number to receive OTP');
+    generateOtp(phone);
+    document.getElementById('otpWrap').style.display = 'block';
+    alert('OTP sent (demo). Check console for code.');
+  });
+
+  // Place order handler: collects form data, verifies OTP, saves order, clears cart
+  document.getElementById('checkoutForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const cart = loadStorage('cart', []);
+    if(!cart || cart.length===0) return alert('Cart is empty');
+    const form = e.target;
+    const fd = new FormData(form);
+    const otpInput = document.getElementById('otpInput').value.trim();
+    const v = verifyOtp(otpInput);
+    if(!v.ok) return alert('OTP verification failed: ' + v.msg);
+
+    // Get user session (optional - can order as guest)
+    const userSession = loadStorage('user_session', null);
+    const userId = userSession ? userSession.userId : 'GUEST-' + Date.now();
+
+    const customer = {
+      name: fd.get('name'),
+      email: fd.get('email'),
+      address: fd.get('address'),
+      city: fd.get('city'),
+      state: fd.get('state'),
+      pincode: fd.get('pincode'),
+      phone: fd.get('phone')
+    };
+    const summary = JSON.parse(sessionStorage.getItem('checkout_summary') || '{}');
+    const subtotal = summary.subtotal || cart.reduce((s,i)=> s + (i.price * i.qty), 0);
+    const tax = summary.tax || Math.round(subtotal * 0.18 * 100) / 100;
+    const shipping = summary.shipping || (subtotal >= 999 ? 0 : 50);
+    const total = summary.total || Math.round((subtotal + tax + shipping) * 100) / 100;
+
+    const orders = loadStorage('orders', []);
+    const orderId = 'ORD' + Date.now() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
+    const order = { id: orderId, userId, date: new Date().toISOString(), items: cart, subtotal, tax, shipping, total, payment_method: fd.get('payment_method') || 'N/A', customer, status: 'new' };
+    orders.push(order);
+    saveStorage('orders', orders);
+    // clear cart
+    saveStorage('cart', []);
+    sessionStorage.removeItem('checkout_otp');
+    sessionStorage.removeItem('checkout_summary');
+    alert('Order placed: ' + orderId);
+    // notify other tabs (storage event triggers in other tabs automatically)
+    // redirect to my orders if logged in, else cart
+    location.href = userSession ? 'my-orders.html' : 'cart.html';
+  });
+
+  // init
+  renderCheckoutSummary();
+
+  // Auth management
+  function checkUserSession() {
+    const session = loadStorage('user_session', null);
+    const authMenuDiv = document.getElementById('authMenuDiv');
+    const userMenuDiv = document.getElementById('userMenuDiv');
+    const logoutDiv = document.getElementById('logoutDiv');
+    
+    if(session) {
+      authMenuDiv.style.display = 'none';
+      userMenuDiv.style.display = 'block';
+      logoutDiv.style.display = 'block';
+    } else {
+      authMenuDiv.style.display = 'block';
+      userMenuDiv.style.display = 'none';
+      logoutDiv.style.display = 'none';
+    }
+  }
+  
+  function handleLogout() {
+    if(confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('user_session');
+      const logs = loadStorage('auth_logs', []);
+      logs.push({type: 'logout', at: new Date().toISOString()});
+      saveStorage('auth_logs', logs);
+      alert('Logged out successfully!');
+      location.href = 'index.html';
+    }
+  }
+  
+  checkUserSession();
+  
+  window.addEventListener('storage', (e) => {
+    if(e.key === 'user_session') {
+      checkUserSession();
+    }
+  });
+</script>
+
+<!-- Animated Footer -->
+<footer class="footer-animated">
+  <div class="footer-content">
+    <div class="container-lg">
+      <div class="footer-top">
+        <div class="row g-4">
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.1s">
+            <div class="footer-brand">
+              <h4 class="footer-title"><i class="fas fa-sari me-2"></i>Indian Cloths</h4>
+              <p class="footer-desc">Your trusted destination for authentic Indian fashion & traditional wear.</p>
+              <div class="footer-social">
+                <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.2s">
+            <h5 class="footer-title"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+              <li><a href="products.html"><i class="fas fa-chevron-right me-2"></i>Products</a></li>
+              <li><a href="cart.html"><i class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+              <li><a href="my-orders.html"><i class="fas fa-chevron-right me-2"></i>Track Orders</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.3s">
+            <h5 class="footer-title"><i class="fas fa-building me-2"></i>Company</h5>
+            <ul class="footer-links">
+              <li><a href="about.html"><i class="fas fa-chevron-right me-2"></i>About Us</a></li>
+              <li><a href="contact.html"><i class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+              <li><a href="admin.html"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+              <li><a href="auth.html"><i class="fas fa-chevron-right me-2"></i>Login/Register</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.4s">
+            <h5 class="footer-title"><i class="fas fa-headset me-2"></i>Contact Info</h5>
+            <div class="footer-contact">
+              <p class="contact-item"><i class="fas fa-envelope icon-primary"></i><span>indianclothes@gmail.com</span></p>
+              <p class="contact-item"><i class="fas fa-phone icon-primary"></i><span>+91 9999999999</span></p>
+              <p class="contact-item"><i class="fas fa-map-marker-alt icon-primary"></i><span>India</span></p>
+              <p class="contact-item"><i class="fas fa-clock icon-primary"></i><span>24/7 Available</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="copyright-text"><i class="fas fa-copyright me-1"></i> 2025 Indian Cloths. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="footer-legal-links">
+              <a href="products.html">Privacy Policy</a>
+              <span class="divider">|</span>
+              <a href="contact.html">Terms of Service</a>
+              <span class="divider">|</span>
+              <a href="about.html">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bg-pattern"></div>
+</footer>
+
+<style>
+  .footer-animated{background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 50%,#1a1a1a 100%);color:#fff;padding:4rem 0 1rem;margin-top:5rem;position:relative;overflow:hidden;border-top:2px solid #d4a574}
+  .footer-animated::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#d4a574,transparent)}
+  .footer-content{position:relative;z-index:2}.footer-top{padding-bottom:3rem}.footer-section{animation:fadeInUp 0.8s ease forwards;opacity:0}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .footer-brand{padding:1rem 0}.footer-brand h4{color:#d4a574;font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;letter-spacing:1px}
+  .footer-desc{color:#b0b0b0;font-size:0.95rem;line-height:1.6;margin-bottom:1.5rem}
+  .footer-social{display:flex;gap:0.75rem}.social-icon{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:rgba(212,165,116,0.1);border:2px solid #d4a574;border-radius:50%;color:#d4a574;transition:all 0.3s ease}
+  .social-icon:hover{background:#d4a574;color:#1a1a1a;transform:translateY(-5px)}
+  .footer-title{color:#d4a574;font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;position:relative;padding-bottom:0.75rem}
+  .footer-title::after{content:'';position:absolute;bottom:0;left:0;width:40px;height:2px;background:#d4a574}
+  .footer-links{list-style:none;padding:0;margin:0}.footer-links li{margin-bottom:0.75rem}
+  .footer-links a{color:#b0b0b0;text-decoration:none;transition:all 0.3s ease;display:flex;align-items:center}
+  .footer-links a:hover{color:#d4a574;padding-left:5px}.footer-links i{color:#d4a574;font-size:0.75rem}
+  .footer-contact{display:flex;flex-direction:column;gap:1rem}.contact-item{display:flex;align-items:center;color:#b0b0b0;margin:0}
+  .icon-primary{color:#d4a574;width:24px;margin-right:1rem}
+  .footer-divider{height:1px;background:linear-gradient(90deg,transparent,#d4a574,transparent);margin:2rem 0}
+  .footer-bottom{padding:2rem 0 1rem}.copyright-text{color:#909090;margin:0;font-size:0.95rem}
+  .footer-legal-links{display:flex;justify-content:center;align-items:center;gap:1rem;flex-wrap:wrap}
+  .footer-legal-links a{color:#b0b0b0;text-decoration:none;transition:color 0.3s ease;font-size:0.95rem}
+  .footer-legal-links a:hover{color:#d4a574}.footer-legal-links .divider{color:#555}
+  @media(max-width:768px){.footer-animated{padding:2rem 0 1rem;margin-top:3rem}.footer-top{padding-bottom:2rem}.footer-section{margin-bottom:1.5rem}.footer-bottom{text-align:center}.footer-legal-links{justify-content:center;margin-top:1rem}}
+  .fade-in-up{animation:fadeInUp 0.8s ease forwards;opacity:0}
+</style>
+
+</body>
+</html>
