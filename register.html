@@ -184,5 +184,335 @@
     location.href = 'index.html';
   });
 </script>
+<footer class="footer-animated">
+  <div class="footer-content">
+    <div class="container-lg">
+      <!-- Top Section -->
+      <div class="footer-top">
+        <div class="row g-4">
+          <!-- Brand Section -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.1s">
+            <div class="footer-brand">
+              <h4 class="footer-title"><i class="fas fa-sari me-2"></i>Indian Cloths</h4>
+              <p class="footer-desc">Your trusted destination for authentic Indian fashion & traditional wear.</p>
+              <div class="footer-social">
+                <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.2s">
+            <h5 class="footer-title"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            <ul class="footer-links">
+              <li><a href="index.html"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+              <li><a href="products.html"><i class="fas fa-chevron-right me-2"></i>Products</a></li>
+              <li><a href="cart.html"><i class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+              <li><a href="my-orders.html"><i class="fas fa-chevron-right me-2"></i>Track Orders</a></li>
+            </ul>
+          </div>
+
+          <!-- Company -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.3s">
+            <h5 class="footer-title"><i class="fas fa-building me-2"></i>Company</h5>
+            <ul class="footer-links">
+              <li><a href="about.html"><i class="fas fa-chevron-right me-2"></i>About Us</a></li>
+              <li><a href="contact.html"><i class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+              <li><a href="admin.html"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+              <li><a href="auth.html"><i class="fas fa-chevron-right me-2"></i>Login/Register</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="col-lg-3 col-md-6 footer-section fade-in-up" style="animation-delay: 0.4s">
+            <h5 class="footer-title"><i class="fas fa-headset me-2"></i>Contact Info</h5>
+            <div class="footer-contact">
+              <p class="contact-item">
+                <i class="fas fa-envelope icon-primary"></i>
+                <span>indianclothes@gmail.com</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-phone icon-primary"></i>
+                <span>+91 9999999999</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-map-marker-alt icon-primary"></i>
+                <span>India</span>
+              </p>
+              <p class="contact-item">
+                <i class="fas fa-clock icon-primary"></i>
+                <span>24/7 Available</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="footer-divider"></div>
+
+      <!-- Bottom Section -->
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="copyright-text">
+              <i class="fas fa-copyright me-1"></i> 2025 Indian Cloths. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="footer-legal-links">
+              <a href="products.html">Privacy Policy</a>
+              <span class="divider">|</span>
+              <a href="contact.html">Terms of Service</a>
+              <span class="divider">|</span>
+              <a href="about.html">Sitemap</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated Background Elements -->
+  <div class="footer-bg-pattern"></div>
+</footer>
+
+<style>
+  /* Animated Footer Styles */
+  .footer-animated {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+    color: #fff;
+    padding: 4rem 0 1rem;
+    margin-top: 5rem;
+    position: relative;
+    overflow: hidden;
+    border-top: 2px solid #d4a574;
+  }
+
+  .footer-animated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+  }
+
+  .footer-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-top {
+    padding-bottom: 3rem;
+  }
+
+  .footer-section {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Brand Section */
+  .footer-brand {
+    padding: 1rem 0;
+  }
+
+  .footer-brand h4 {
+    color: #d4a574;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  .footer-desc {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Social Icons */
+  .footer-social {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(212, 165, 116, 0.1);
+    border: 2px solid #d4a574;
+    border-radius: 50%;
+    color: #d4a574;
+    transition: all 0.3s ease;
+  }
+
+  .social-icon:hover {
+    background: #d4a574;
+    color: #1a1a1a;
+    transform: translateY(-5px);
+  }
+
+  /* Footer Title */
+  .footer-title {
+    color: #d4a574;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+  }
+
+  .footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: #d4a574;
+  }
+
+  /* Footer Links */
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .footer-links a:hover {
+    color: #d4a574;
+    padding-left: 5px;
+  }
+
+  .footer-links i {
+    color: #d4a574;
+    font-size: 0.75rem;
+  }
+
+  /* Contact Info */
+  .footer-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    color: #b0b0b0;
+    margin: 0;
+  }
+
+  .icon-primary {
+    color: #d4a574;
+    width: 24px;
+    margin-right: 1rem;
+  }
+
+  /* Footer Divider */
+  .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
+    margin: 2rem 0;
+  }
+
+  /* Bottom Section */
+  .footer-bottom {
+    padding: 2rem 0 1rem;
+  }
+
+  .copyright-text {
+    color: #909090;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .footer-legal-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-legal-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .footer-legal-links a:hover {
+    color: #d4a574;
+  }
+
+  .footer-legal-links .divider {
+    color: #555;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-animated {
+      padding: 2rem 0 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer-top {
+      padding-bottom: 2rem;
+    }
+
+    .footer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+    }
+
+    .footer-legal-links {
+      justify-content: center;
+      margin-top: 1rem;
+    }
+  }
+
+  /* Fade In Animation */
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+</style>
+
 </body>
 </html>
