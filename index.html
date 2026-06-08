@@ -6,14 +6,10 @@
   <title>Indian Cloths - Authentic Indian Fashion</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://unpkg.com/@supabase/supabase-js">const supabaseUrl = "https://abcd1234.supabase.co";
-const supabaseKey = "YOUR_ANON_PUBLIC_KEY";
-
-const supabase = supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
-</script>
+  <!-- Firebase compat SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="firebase-auth.js"></script>
 
   
   <style>
@@ -638,46 +634,25 @@ const supabase = supabase.createClient(
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Auth management
-  function loadStorage(key, def){ try{ return JSON.parse(localStorage.getItem(key)) || def }catch(e){return def} }
-  function saveStorage(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
-  
-  function checkUserSession() {
-    const session = loadStorage('user_session', null);
+  // Auth UI – driven by Firebase auth state (via firebase-auth.js)
+  function updateNavAuth(signedIn) {
     const authMenuDiv = document.getElementById('authMenuDiv');
     const userMenuDiv = document.getElementById('userMenuDiv');
-    const logoutDiv = document.getElementById('logoutDiv');
-    
-    if(session) {
-      authMenuDiv.style.display = 'none';
-      userMenuDiv.style.display = 'block';
-      logoutDiv.style.display = 'block';
-    } else {
-      authMenuDiv.style.display = 'block';
-      userMenuDiv.style.display = 'none';
-      logoutDiv.style.display = 'none
+    const logoutDiv   = document.getElementById('logoutDiv');
+    authMenuDiv.style.display = signedIn ? 'none'  : 'block';
+    userMenuDiv.style.display = signedIn ? 'block' : 'none';
+    logoutDiv.style.display   = signedIn ? 'block' : 'none';
   }
-  
-  function handleLogout() {
-    if(confirm('Are you sure you want to logout?')) {
-      localStorage.removeItem('user_session');
-      const logs = loadStorage('auth_logs', []);
-      logs.push({type: 'logout', at: new Date().toISOString()});
-      saveStorage('auth_logs', logs);
-      alert('Logged out successfully!');
+
+  async function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+      await firebaseSignOut();
       location.href = 'index.html';
     }
   }
-  
-  // Check session on page load
-  checkUserSession();
-  
-  // Listen for storage changes (logout from another tab)
-  window.addEventListener('storage', (e) => {
-    if(e.key === 'user_session') {
-      checkUserSession();
-    }
-  });
+
+  // Fired by firebase-auth.js once auth state is known
+  window.__onFirebaseAuthReady = (user) => updateNavAuth(!!user);
 
   // Add animations on scroll
   const observerOptions = {
